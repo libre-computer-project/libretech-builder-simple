@@ -31,7 +31,7 @@ LBS_exportGCCPATH(){
 }
 LBS_getATF(){
 	if [ ! -d "$LBS_ATF_PATH" ]; then
-		git clone --single-branch -b "$ATF_GIT_BRANCH" "$ATF_GIT_URL" "$LBS_ATF_PATH"
+		git clone --single-branch --depth 1 -b "$ATF_GIT_BRANCH" "$ATF_GIT_URL" "$LBS_ATF_PATH"
 	fi
 }
 LBS_buildATF(){
@@ -40,11 +40,11 @@ LBS_buildATF(){
 }
 LBS_getEDK2(){
 	if [ ! -d "$LBS_EDK2_PATH" ]; then
-		git clone --single-branch -b "$EDK2_GIT_BRANCH" https://github.com/tianocore/edk2.git "$LBS_EDK2_PATH"
+		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$LBS_EDK2_PATH"
 		git -C "$LBS_EDK2_PATH" submodule update --init
 	fi
 	if [ ! -d "$LBS_EDK2PLAT_PATH" ]; then
-		git clone --single-branch -b "$EDK2PLAT_GIT_BRANCH" https://github.com/tianocore/edk2-platforms.git "$LBS_EDK2PLAT_PATH"
+		git clone --single-branch --depth 1 -b "$EDK2PLAT_GIT_BRANCH" "$LBS_EDK2PLAT_PATH"
 		git -C "$LBS_EDK2PLAT_PATH" submodule update --init
 	fi
 }
@@ -69,7 +69,7 @@ LBS_buildOPTEE(){
 }
 LBS_getUBoot(){
 	if [ ! -d "$LBS_UBOOT_PATH" ]; then
-		git clone --single-branch -b "$UBOOT_GIT_BRANCH" "$UBOOT_GIT_URL" "$LBS_UBOOT_PATH"
+		git clone --single-branch --depth 1 -b "$UBOOT_GIT_BRANCH" "$UBOOT_GIT_URL" "$LBS_UBOOT_PATH"
 	fi
 }
 LBS_buildUBoot(){
