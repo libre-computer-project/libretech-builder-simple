@@ -124,8 +124,8 @@ LBS_downloadGCC
 LBS_exportGCCPATH
 LBS_getATF
 LBS_buildATF
-LBS_getEDK2
-LBS_buildEDK2
+#LBS_getEDK2
+#LBS_buildEDK2
 #LBS_getOPTEE
 #LBS_buildOPTEE
 LBS_getUBoot
