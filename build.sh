@@ -40,11 +40,11 @@ LBS_buildATF(){
 }
 LBS_getEDK2(){
 	if [ ! -d "$LBS_EDK2_PATH" ]; then
-		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$LBS_EDK2_PATH"
+		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$EDK2_GIT_URL" "$LBS_EDK2_PATH"
 		git -C "$LBS_EDK2_PATH" submodule update --init
 	fi
 	if [ ! -d "$LBS_EDK2PLAT_PATH" ]; then
-		git clone --single-branch --depth 1 -b "$EDK2PLAT_GIT_BRANCH" "$LBS_EDK2PLAT_PATH"
+		git clone --single-branch --depth 1 -b "$EDK2PLAT_GIT_BRANCH" "$EDK2PLAT_GIT_URL" "$LBS_EDK2PLAT_PATH"
 		git -C "$LBS_EDK2PLAT_PATH" submodule update --init
 	fi
 }
@@ -62,7 +62,9 @@ LBS_buildEDK2(){
 	cd "$OLDPWD"
 }
 LBS_getOPTEE(){
-	:
+	if [ ! -d "$LBS_OPTEE_PATH" ]; then
+		git clone --single-branch --depth 1 -b $OPTEE_GIT_BRANCH "$OPTEE_GIT_URL" "$LBS_OPTEE_PATH"
+	fi
 }
 LBS_buildOPTEE(){
 	:
@@ -122,8 +124,8 @@ LBS_downloadGCC
 LBS_exportGCCPATH
 LBS_getATF
 LBS_buildATF
-#LBS_getEDK2
-#LBS_buildEDK2
+LBS_getEDK2
+LBS_buildEDK2
 #LBS_getOPTEE
 #LBS_buildOPTEE
 LBS_getUBoot
