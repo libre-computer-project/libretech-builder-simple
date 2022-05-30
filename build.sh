@@ -4,7 +4,7 @@ set -ex
 
 cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
-. build.cfg
+. config/build
 
 LBS_downloadGCC(){
 	cd "$LBS_GCC_PATH"
@@ -73,7 +73,7 @@ LBS_getUBoot(){
 	fi
 }
 LBS_buildUBoot(){
-	BL31="$(readlink -f $LBS_ATF_PATH)"/build/rk3399/release/bl31/bl31.elf
+	BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_TARGET/$ATF_OUTPUT_FILE
 	if [ ! -f "$BL31" ]; then
 		echo "$FUNCNAME BL31 missing?"
 		exit 1

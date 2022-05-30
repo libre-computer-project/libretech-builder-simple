@@ -2,6 +2,7 @@ ATF_GIT_URL='https://github.com/ARM-software/arm-trusted-firmware.git'
 ATF_GIT_BRANCH=master
 ATF_PLAT=rk3399
 ATF_TARGET=bl31
+ATF_OUTPUT_FILE=bl31.elf
 
 EDK2_GIT_URL='https://github.com/tianocore/edk2.git'
 EDK2_GIT_BRANCH=master
