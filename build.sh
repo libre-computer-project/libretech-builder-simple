@@ -7,6 +7,9 @@ cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 . config/build
 
 LBS_downloadGCC(){
+	if [ ! -d "$LBS_GCC_PATH" ]; then
+		mkdir -p "$LBS_GCC_PATH"
+	fi
 	cd "$LBS_GCC_PATH"
 	if [ ! -d "gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf" ]; then
 		wget https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-elf/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf.tar.xz
