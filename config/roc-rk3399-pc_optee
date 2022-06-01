@@ -4,11 +4,22 @@ ATF_PLAT=rk3399
 ATF_TARGET=bl31
 ATF_OUTPUT_FILE=bl31.elf
 
-LBS_OPTEE=0
+LBS_OPTEE=1
+
+EDK2_GIT_URL='https://github.com/tianocore/edk2.git'
+EDK2_GIT_BRANCH=master
+
+EDK2PLAT_GIT_URL='https://github.com/tianocore/edk2-platforms.git'
+EDK2PLAT_GIT_BRANCH=master
+
+OPTEE_GIT_URL=https://github.com/OP-TEE/optee_os.git
+OPTEE_GIT_BRANCH=master
+OPTEE_PLAT=rockchip-rk3399
+OPTEE_PLATELF_DIR=rockchip
 
 UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_GIT_BRANCH=u-boot/v2022.04/roc-rk3399-pc
-UBOOT_TARGET=roc-pc-rk3399_defconfig
+UBOOT_TARGET=roc-pc-rk3399_optee_defconfig
 
 SPIFLASH_MKIMAGE_NAME=rk3399
 SPIFLASH_LOAD=vendor/rockchip/spiflash.sh

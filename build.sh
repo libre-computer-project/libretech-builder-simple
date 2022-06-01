@@ -23,6 +23,12 @@ LBS_downloadGCC(){
 		wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
 		tar -xf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
 	fi
+	if [ "$LBS_OPTEE" -eq 1 ]; then
+		if [ ! -d "gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf" ]; then
+			wget wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz
+			tar -xf gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz
+		fi
+	fi
 	cd "$OLDPWD"
 }
 LBS_exportGCCPATH(){
@@ -30,6 +36,9 @@ LBS_exportGCCPATH(){
 	export PATH=$PWD/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin:$PATH
 	export PATH=$PWD/gcc-arm-none-eabi-7-2018-q2-update/bin:$PATH
 	export PATH=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin:$PATH
+	if [ "$LBS_OPTEE" -eq 1 ]; then
+		export PATH=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin:$PATH
+	fi
 	cd "$OLDPWD"
 }
 LBS_getATF(){
@@ -42,25 +51,26 @@ LBS_buildATF(){
 	CROSS_COMPILE=aarch64-elf- make -C "$LBS_ATF_PATH" -j PLAT=$ATF_PLAT DEBUG=0 $ATF_TARGET
 }
 LBS_getEDK2(){
-	if [ ! -d "$LBS_EDK2_PATH" ]; then
-		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$EDK2_GIT_URL" "$LBS_EDK2_PATH"
-		git -C "$LBS_EDK2_PATH" submodule update --init
+	mkdir -p "$LBS_EDK2_PATH"
+	if [ ! -d "$LBS_EDK2BASE_PATH" ]; then
+		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$EDK2_GIT_URL" "$LBS_EDK2BASE_PATH"
 	fi
 	if [ ! -d "$LBS_EDK2PLAT_PATH" ]; then
 		git clone --single-branch --depth 1 -b "$EDK2PLAT_GIT_BRANCH" "$EDK2PLAT_GIT_URL" "$LBS_EDK2PLAT_PATH"
-		git -C "$LBS_EDK2PLAT_PATH" submodule update --init
 	fi
+	git -C "$LBS_EDK2BASE_PATH" submodule init
+	git -C "$LBS_EDK2BASE_PATH" submodule update --init --recursive --single-branch --depth 1 
 }
 LBS_buildEDK2(){
-	LBS_EDK2PLAT_PATH_ABS="$(readlink -f LBS_EDK2PLAT_PATH)"
+	LBS_EDK2BASE_PATH_ABS="$(readlink -f $LBS_EDK2BASE_PATH)"
+	LBS_EDK2PLAT_PATH_ABS="$(readlink -f $LBS_EDK2PLAT_PATH)"
 	cd "$LBS_EDK2_PATH"
 	export WORKSPACE="$PWD"
-	export PACKAGES_PATH="$LBS_EDK2_PATH_ABS":"$PWD"
+	export PACKAGES_PATH="$LBS_EDK2BASE_PATH_ABS:$LBS_EDK2PLAT_PATH_ABS"
 	export ACTIVE_PLATFORM="Platform/StandaloneMm/PlatformStandaloneMmPkg/PlatformStandaloneMmRpmb.dsc"
 	export GCC5_AARCH64_PREFIX=aarch64-linux-gnu-
-	. edksetup.sh
-	make -C BaseTools clean
-	make -C BaseTools
+	. "$LBS_EDK2BASE_PATH_ABS/edksetup.sh"
+	make -C "$LBS_EDK2BASE_PATH_ABS/BaseTools"
 	build -p $ACTIVE_PLATFORM -b RELEASE -a AARCH64 -t GCC5 -n `nproc`
 	cd "$OLDPWD"
 }
@@ -70,7 +80,14 @@ LBS_getOPTEE(){
 	fi
 }
 LBS_buildOPTEE(){
-	:
+	#ln -s "$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" "$LBS_OPTEE_PATH" 
+	ARCH=arm CROSS_COMPILE32=arm-linux-gnueabihf- make -C "$LBS_OPTEE_PATH" -j`nproc` \
+		CFG_ARM64_core=y PLATFORM=$OPTEE_PLAT CFG_STMM_PATH="$PWD/$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" \
+		CFG_RPMB_FS=y CFG_RPMB_FS_DEV_ID=0 CFG_CORE_HEAP_SIZE=524288 \
+		CFG_RPMB_WRITE_KEY=y CFG_CORE_HEAP_SIZE=524288 CFG_CORE_DYN_SHM=y \
+		CFG_RPMB_TESTKEY=y CFG_REE_FS=n CFG_CORE_ARM64_PA_BITS=48 \
+		CFG_TEE_CORE_LOG_LEVEL=3 CFG_TEE_TA_LOG_LEVEL=3 \
+		CFG_SCTLR_ALIGNMENT_CHECK=n
 }
 LBS_getUBoot(){
 	if [ ! -d "$LBS_UBOOT_PATH" ]; then
@@ -84,6 +101,14 @@ LBS_buildUBoot(){
 		exit 1
 	fi
 	export BL31
+	if [ "$LBS_OPTEE" -eq 1 ]; then
+		TEE="$(readlink -f "$LBS_OPTEE_PATH")"/out/arm-plat-$OPTEE_PLATELF_DIR/core/tee.elf
+		if [ ! -f "$TEE" ]; then
+			echo "$FUNCNAME TEE missing?"
+			exit1
+		fi
+		export TEE
+	fi
 	CROSS_COMPILE=aarch64-elf- make -C u-boot distclean
 	CROSS_COMPILE=aarch64-elf- make -C u-boot -j $UBOOT_TARGET
 	CROSS_COMPILE=aarch64-elf- make -C u-boot -j
@@ -100,9 +125,11 @@ $SPIFLASH_SFDISK
 w
 EOF
 	sync
+	sleep 1
 	sudo partprobe $loop_dev
 	if [ ! -b ${loop_dev}p1 ]; then
 		echo "$FUNCNAME partition 1 is missing?"
+		bash
 		sudo losetup -d $loop_dev
 		exit 1
 	fi
@@ -127,10 +154,12 @@ LBS_downloadGCC
 LBS_exportGCCPATH
 LBS_getATF
 LBS_buildATF
-#LBS_getEDK2
-#LBS_buildEDK2
-#LBS_getOPTEE
-#LBS_buildOPTEE
+if [ "$LBS_OPTEE" -eq 1 ]; then
+	LBS_getEDK2
+	LBS_buildEDK2
+	LBS_getOPTEE
+	LBS_buildOPTEE
+fi
 LBS_getUBoot
 LBS_buildUBoot
 LBS_makeSPIFlashImage
