@@ -4,4 +4,4 @@ device: /dev/mmcblk0
 unit: sectors
 sector-size: 512
 
-/dev/mmcblk0p1 : start=4096, size=4096, type=ef
+/dev/mmcblk0p1 : start=8192, type=ef

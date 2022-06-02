@@ -25,3 +25,4 @@ SPIFLASH_MKIMAGE_NAME=rk3399
 SPIFLASH_LOAD=vendor/rockchip/spiflash.sh
 SPIFLASH_SFDISK=vendor/rockchip/spiflash.sfdisk
 SPIFLASH_SCRIPT=vendor/rockchip/spiflash.cmd
+SPIFLASH_DISK_SIZE=8M
