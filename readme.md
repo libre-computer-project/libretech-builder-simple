@@ -15,6 +15,8 @@ Replace "BOARD_TARGET" and "null" to the proper file and block device respective
 
 ## More Information
 
+ROC-RK3399-PC is supported by Linux 5.18 or higher. Prior to 5.18, there are some issues with USB and MicroSD.
+
 ### Builder
 [u-boot v2022.04 for ROC-RK3399-PC](https://docs.google.com/document/d/1AAM7x48Z95iLpF5f5JBrEqgYNY27Idx1-nfyYzHDvZw/edit?usp=sharing).
 
