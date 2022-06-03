@@ -4,7 +4,7 @@ set -ex
 
 cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
-. config/build
+. configs/build
 
 LBS_downloadGCC(){
 	if [ ! -d "$LBS_GCC_PATH" ]; then
@@ -12,20 +12,20 @@ LBS_downloadGCC(){
 	fi
 	cd "$LBS_GCC_PATH"
 	if [ ! -d "gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf" ]; then
-		wget https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-elf/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf.tar.xz
+		wget "https://releases.linaro.org/components/toolchain/binaries/latest-7/aarch64-elf/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf.tar.xz"
 		tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf.tar.xz
 	fi
 	if [ ! -d "gcc-arm-none-eabi-7-2018-q2-update" ]; then
-		wget --content-disposition https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2?revision=bc2c96c0-14b5-4bb4-9f18-bceb4050fee7?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2018-q2-update
+		wget --content-disposition "https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2?revision=bc2c96c0-14b5-4bb4-9f18-bceb4050fee7?product=GNU%20Arm%20Embedded%20Toolchain,64-bit,,Linux,7-2018-q2-update"
 		tar -xf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
 	fi
 	if [ ! -d "gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu" ]; then
-		wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
+		wget "https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz"
 		tar -xf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
 	fi
 	if [ "$LBS_OPTEE" -eq 1 ]; then
 		if [ ! -d "gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf" ]; then
-			wget wget https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz
+			wget "https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz"
 			tar -xf gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz
 		fi
 	fi
@@ -95,7 +95,7 @@ LBS_getUBoot(){
 	fi
 }
 LBS_buildUBoot(){
-	BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_TARGET/$ATF_OUTPUT_FILE
+	BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_OUTPUT_FILE
 	if [ ! -f "$BL31" ]; then
 		echo "$FUNCNAME BL31 missing?"
 		exit 1
@@ -105,13 +105,21 @@ LBS_buildUBoot(){
 		TEE="$(readlink -f "$LBS_OPTEE_PATH")"/out/arm-plat-$OPTEE_PLATELF_DIR/core/tee.elf
 		if [ ! -f "$TEE" ]; then
 			echo "$FUNCNAME TEE missing?"
-			exit1
+			exit 1
 		fi
 		export TEE
 	fi
-	CROSS_COMPILE=aarch64-elf- make -C u-boot distclean
-	CROSS_COMPILE=aarch64-elf- make -C u-boot -j $UBOOT_TARGET
-	CROSS_COMPILE=aarch64-elf- make -C u-boot -j
+	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" distclean
+	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j $UBOOT_TARGET
+	if [ ! -z "$LBS_UBOOT_MENUCONFIG" ]; then
+		CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j menuconfig
+		read -n 1 -p "$FUNCNAME save config to defconfig? (y/N)" save
+		if [ "${save,,}" = y ]; then
+			CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j savedefconfig
+			mv "$LBS_UBOOT_PATH"/defconfig "$LBS_UBOOT_PATH"/configs/$UBOOT_TARGET
+		fi
+	fi
+	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j
 }
 LBS_makeSPIFlashImage(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
@@ -128,10 +136,13 @@ EOF
 	sleep 1
 	sudo partprobe $loop_dev
 	if [ ! -b ${loop_dev}p1 ]; then
-		echo "$FUNCNAME partition 1 is missing?"
-		bash
-		sudo losetup -d $loop_dev
-		exit 1
+		read -n 1 -p "$FUNCNAME sanity check failed, partition 1 on $loop_dev is missing, drop to shell to fix? (y/N)" fix
+		if [ "${fix,,}" = y ]; then
+			bash
+		else
+			sudo losetup -d $loop_dev
+			exit 1
+		fi
 	fi
 	. "$SPIFLASH_LOAD"
 	sudo losetup -d $loop_dev
@@ -143,12 +154,12 @@ fi
 
 LBS_TARGET="$1"
 
-if [ ! -f "config/$LBS_TARGET" ]; then
+if [ ! -f "configs/$LBS_TARGET" ]; then
 	echo "config $LBS_TARGET does not exist"
 	exit 1
 fi
 
-. "config/$LBS_TARGET"
+. "configs/$LBS_TARGET"
 
 LBS_downloadGCC
 LBS_exportGCCPATH
