@@ -41,8 +41,30 @@ LBS_exportGCCPATH(){
 	fi
 	cd "$OLDPWD"
 }
+LBS_GIT_switchBranch(){
+	local path_tar="$1"
+	local branch_tar="$2"
+	local branch_cur=$(git -C "$path_tar" branch --show-current)
+	if [ "$branch_cur" != "$branch_tar" ]; then
+		#check for modified tracked
+		local files_unc=$(git -C "$path_tar" status -s | grep -v '^??')
+		if [ ! -z "$files_unc" ]; then
+			echo "$FUNCNAME cannot switch branch when there are uncommited files."
+			return 1
+		fi
+		local branch_exi=$(git -C "$path_tar" branch --list "$branch_tar")
+		if [ -z "$branch_exi" ]; then
+			git -C "$path_tar" fetch --depth=1 "$LBS_GIT_REMOTE_DEFAULT" "$branch_tar"
+			git -C "$path_tar" checkout -b "$branch_tar" FETCH_HEAD
+		else
+			git -C "$path_tar" checkout "$branch_tar"
+		fi
+	fi
+}
 LBS_getATF(){
-	if [ ! -d "$LBS_ATF_PATH" ]; then
+	if [ -d "$LBS_ATF_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_ATF_PATH" "$ATF_GIT_BRANCH"
+	else
 		git clone --single-branch --depth 1 -b "$ATF_GIT_BRANCH" "$ATF_GIT_URL" "$LBS_ATF_PATH"
 	fi
 }
@@ -52,10 +74,14 @@ LBS_buildATF(){
 }
 LBS_getEDK2(){
 	mkdir -p "$LBS_EDK2_PATH"
-	if [ ! -d "$LBS_EDK2BASE_PATH" ]; then
+	if [ -d "$LBS_EDK2BASE_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_EDK2BASE_PATH" "$LBS_EDK2BASE_BRANCH"
+	else
 		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$EDK2_GIT_URL" "$LBS_EDK2BASE_PATH"
 	fi
-	if [ ! -d "$LBS_EDK2PLAT_PATH" ]; then
+	if [ -d "$LBS_EDK2PLAT_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_EDK2PLAT_PATH" "$EDK2PLAT_GIT_BRANCH"
+	else
 		git clone --single-branch --depth 1 -b "$EDK2PLAT_GIT_BRANCH" "$EDK2PLAT_GIT_URL" "$LBS_EDK2PLAT_PATH"
 	fi
 	git -C "$LBS_EDK2BASE_PATH" submodule init
@@ -75,7 +101,9 @@ LBS_buildEDK2(){
 	cd "$OLDPWD"
 }
 LBS_getOPTEE(){
-	if [ ! -d "$LBS_OPTEE_PATH" ]; then
+	if [ -d "$LBS_OPTEE_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_OPTEE_PATH" "$OPTEE_GIT_BRANCH"
+	else
 		git clone --single-branch --depth 1 -b $OPTEE_GIT_BRANCH "$OPTEE_GIT_URL" "$LBS_OPTEE_PATH"
 	fi
 }
@@ -90,7 +118,9 @@ LBS_buildOPTEE(){
 		CFG_SCTLR_ALIGNMENT_CHECK=n
 }
 LBS_getUBoot(){
-	if [ ! -d "$LBS_UBOOT_PATH" ]; then
+	if [ -d "$LBS_UBOOT_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_UBOOT_PATH" "$UBOOT_GIT_BRANCH"
+	else
 		git clone --single-branch --depth 1 -b "$UBOOT_GIT_BRANCH" "$UBOOT_GIT_URL" "$LBS_UBOOT_PATH"
 	fi
 }
