@@ -23,8 +23,10 @@ UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_GIT_BRANCH=u-boot/v2022.04/roc-rk3399-pc
 UBOOT_TARGET=roc-pc-rk3399_optee_defconfig
 
+. configs/rockchip
+ 
 SPIFLASH_MKIMAGE_NAME=rk3399
-SPIFLASH_LOAD=vendor/rockchip/spiflash.sh
-SPIFLASH_SFDISK=vendor/rockchip/spiflash.sfdisk
-SPIFLASH_SCRIPT=vendor/rockchip/spiflash.cmd
+SPIFLASH_LOAD=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.sh
+SPIFLASH_SFDISK=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.sfdisk
+SPIFLASH_SCRIPT=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.cmd
 SPIFLASH_DISK_SIZE=8M

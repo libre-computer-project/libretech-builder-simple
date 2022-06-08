@@ -75,7 +75,7 @@ LBS_buildATF(){
 LBS_getEDK2(){
 	mkdir -p "$LBS_EDK2_PATH"
 	if [ -d "$LBS_EDK2BASE_PATH" ]; then
-		LBS_GIT_switchBranch "$LBS_EDK2BASE_PATH" "$LBS_EDK2BASE_BRANCH"
+		LBS_GIT_switchBranch "$LBS_EDK2BASE_PATH" "$EDK2_GIT_BRANCH"
 	else
 		git clone --single-branch --depth 1 -b "$EDK2_GIT_BRANCH" "$EDK2_GIT_URL" "$LBS_EDK2BASE_PATH"
 	fi

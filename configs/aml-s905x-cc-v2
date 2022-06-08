@@ -1,0 +1,20 @@
+BOARD_NAME=aml-s905x-cc-v2
+
+ATF_GIT_URL='https://github.com/ARM-software/arm-trusted-firmware.git'
+ATF_GIT_BRANCH=master
+ATF_PLAT=gxl
+ATF_TARGET=bl31
+ATF_OUTPUT_FILE=bl31.bin
+
+LBS_OPTEE=0
+
+UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_GIT_BRANCH=u-boot/v2022.04/aml-s905x-cc-v2
+UBOOT_TARGET=libretech-cc_v2_defconfig
+
+. configs/amlogic
+
+SPIFLASH_LOAD=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.sh
+SPIFLASH_SFDISK=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.sfdisk
+SPIFLASH_SCRIPT=$LBS_VENDOR_PATH/$VENDOR_PATH/spiflash.cmd
+SPIFLASH_DISK_SIZE=8M
