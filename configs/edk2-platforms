@@ -1,0 +1,2 @@
+EDK2PLAT_GIT_URL='https://github.com/tianocore/edk2-platforms.git'
+EDK2PLAT_GIT_BRANCH=master

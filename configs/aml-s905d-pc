@@ -1,4 +1,4 @@
-BOARD_NAME=aml-s905x-cc-v2
+BOARD_NAME=aml-s905d-pc
 
 . configs/atf
 
@@ -7,7 +7,7 @@ BOARD_NAME=aml-s905x-cc-v2
 LBS_OPTEE=0
 
 UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=u-boot/v2022.04/aml-s905x-cc-v2
-UBOOT_TARGET=libretech-cc_v2_defconfig
+UBOOT_GIT_BRANCH=u-boot/v2022.04/aml-s905d-pc
+UBOOT_TARGET=libretech-s905d-pc_defconfig
 
 . configs/spiflash

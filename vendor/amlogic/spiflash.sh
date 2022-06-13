@@ -15,7 +15,8 @@ local sd="$LBS_UBOOT_PATH/u-boot-amlogic.bin"
 
 $gxlimg_path/gxlimg -t bl2 -s "$blx_path"/$BOARD_NAME/bl2_new.bin "$blx_path"/$BOARD_NAME/bl2.bin.enc
 $gxlimg_path/gxlimg -t bl3x -c "$blx_path"/$BOARD_NAME/bl30_new.bin "$blx_path"/$BOARD_NAME/bl30.bin.enc
-$gxlimg_path/gxlimg -t bl3x -c "$blx_path"/$BOARD_NAME/bl31.img "$blx_path"/$BOARD_NAME/bl31.img.enc
+#$gxlimg_path/gxlimg -t bl3x -c "$blx_path"/$BOARD_NAME/bl31.img "$blx_path"/$BOARD_NAME/bl31.img.enc
+$gxlimg_path/gxlimg -t bl3x -c "$BL31" "$blx_path"/$BOARD_NAME/bl31.img.enc
 $gxlimg_path/gxlimg -t bl3x -c "$LBS_UBOOT_PATH"/u-boot.bin "$LBS_UBOOT_PATH"/u-boot.bin.enc
 #$gxlimg_path/gxlimg -t fip --bl2 "$blx_path"/$BOARD_NAME/bl2.bin.enc --bl30 "$blx_path"/$BOARD_NAME/bl30.bin.enc --bl31 "$blx_path"/$BOARD_NAME/bl31.img.enc --bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc "$LBS_UBOOT_PATH"/u-boot-amlogic.bin
 $gxlimg_path/gxlimg -t fip --bl2 "$blx_path"/$BOARD_NAME/bl2.bin.enc --bl30 "$blx_path"/$BOARD_NAME/bl30.bin.enc --bl31 "$blx_path"/$BOARD_NAME/bl31.img.enc --bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc "$sd"
