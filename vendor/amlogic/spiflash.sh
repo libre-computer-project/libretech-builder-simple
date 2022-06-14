@@ -20,6 +20,8 @@ $gxlimg_path/gxlimg -t bl3x -c "$BL31" "$blx_path"/$BOARD_NAME/bl31.img.enc
 $gxlimg_path/gxlimg -t bl3x -c "$LBS_UBOOT_PATH"/u-boot.bin "$LBS_UBOOT_PATH"/u-boot.bin.enc
 #$gxlimg_path/gxlimg -t fip --bl2 "$blx_path"/$BOARD_NAME/bl2.bin.enc --bl30 "$blx_path"/$BOARD_NAME/bl30.bin.enc --bl31 "$blx_path"/$BOARD_NAME/bl31.img.enc --bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc "$LBS_UBOOT_PATH"/u-boot-amlogic.bin
 $gxlimg_path/gxlimg -t fip --bl2 "$blx_path"/$BOARD_NAME/bl2.bin.enc --bl30 "$blx_path"/$BOARD_NAME/bl30.bin.enc --bl31 "$blx_path"/$BOARD_NAME/bl31.img.enc --bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc "$sd"
+dd if="$sd" of="$LBS_UBOOT_PATH/u-boot-amlogic.usb.bl2" bs=49152 count=1
+dd if="$sd" of="$LBS_UBOOT_PATH/u-boot-amlogic.usb.tpl" skip=49152 bs=1
 
 sudo mkfs.vfat ${loop_dev}p1
 local loop_mnt="$(mktemp -d)"
