@@ -17,7 +17,7 @@ STRING_APT_SOURCES_CDROM_SED="s/^deb\\s+cdrom.*/# \0\n\ndeb http:\\/\\/deb.debia
 STRING_APT_SOURCES_UPDATE_SED="s/^#?\\s*(deb\\s+http.*)\\s+(main)/\\1 \\2 contrib non-free/g"
 
 FILE_GRUB=/boot/efi/EFI/BOOT/BOOTAA64.EFI
-FILE_GRUB_DEFAULT=/boot/default/grub
+FILE_GRUB_DEFAULT=/etc/default/grub
 STRING_GRUB_DEFAULT_GREP='GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
 STRING_GRUB_DEFAULT_SED="s/(GRUB_CMDLINE_LINUX_DEFAULT=)\"quiet\"/\\1\"noquiet\"/"
 COMMAND_GRUB_INSTALL="grub-install --force-extra-removable"
