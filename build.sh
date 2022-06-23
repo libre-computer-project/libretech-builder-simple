@@ -177,6 +177,32 @@ EOF
 	. "$SPIFLASH_LOAD"
 	sudo losetup -d $loop_dev
 }
+LBS_makeMBRUEFI(){
+	if [ ! -d "$LBS_OUT_PATH" ]; then
+		mkdir -p "$LBS_OUT_PATH"
+	fi
+	truncate -s $MBRUEFI_DISK_SIZE "$LBS_OUT_PATH/$LBS_TARGET"
+	local loop_dev=$(sudo losetup --show -f "$LBS_OUT_PATH/$LBS_TARGET")
+	sudo fdisk $loop_dev <<EOF || true
+I
+$MBRUEFI_SFDISK
+w
+EOF
+	sync
+	sleep 1
+	sudo partprobe $loop_dev
+	if [ ! -b ${loop_dev}p1 ]; then
+		read -n 1 -p "$FUNCNAME sanity check failed, partition 1 on $loop_dev is missing, drop to shell to fix? (y/N)" fix
+		if [ "${fix,,}" = y ]; then
+			bash
+		else
+			sudo losetup -d $loop_dev
+			exit 1
+		fi
+	fi
+	. "$MBRUEFI_LOAD"
+	sudo losetup -d $loop_dev
+}
 if [ -z "$1" ]; then
 	echo "$0 config"
 	exit 1
@@ -203,5 +229,8 @@ if [ "$LBS_OPTEE" -eq 1 ]; then
 fi
 LBS_getUBoot
 LBS_buildUBoot
-LBS_makeSPIFlashImage
-
+if [ ! -z "$SPIFLASH" ]; then
+	LBS_makeSPIFlashImage
+elif [ ! -z "$MBRUEFI" ]; then
+	LBS_makeMBRUEFI
+fi
