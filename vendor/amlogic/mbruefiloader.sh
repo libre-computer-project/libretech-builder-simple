@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 if [ -z "$1" ]; then
 	echo "$0 TARGET #eg: $0 mmcblk1" >&2
@@ -22,4 +22,8 @@ fi
 
 #TODO check starting sector of first partition
 
-sudo dd if="$SCRIPT_DIR/u-boot.bin" of="$TARGET" conv=fsync,notrunc bs=512 seek=1
+if [ "$USER" = "root" ]; then
+	dd if="$SCRIPT_DIR/u-boot.bin" of="$TARGET" conv=fsync,notrunc bs=512 seek=1
+else
+	sudo dd if="$SCRIPT_DIR/u-boot.bin" of="$TARGET" conv=fsync,notrunc bs=512 seek=1
+fi
