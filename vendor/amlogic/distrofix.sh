@@ -42,6 +42,15 @@ DF_APT_fixSources(){
 		fi
 	fi
 }
+DF_DPKG_useUnsafeIO(){
+	local STRING_DPKG_FORCE_UNSAFE_IO="/etc/dpkg/dpkg.cfg.d/force-unsafe-io"
+	if echo "${STRING_DPKG_FORCE_UNSAFE_IO##*/}" > "$STRING_DPKG_FORCE_UNSAFE_IO"; then
+		echo "dpkg force-unsafe-io enabled" >&2
+	else
+		echo "dpkg force-unsafe-io failed" >&2
+		exit 1
+	fi
+}
 DF_FSTAB_addOptions(){
 	local FILE_FSTAB=/etc/fstab
 	local STRING_FSTAB_GREP="\\s/\\s\\+btrfs\\s\\+"
@@ -156,6 +165,7 @@ if [ ! -z "$ID" -a "$ID" = "$STRING_DISTRO_DEBIAN" ]; then
 		DF_NET_add
 		
 		DF_APT_fixSources
+		DF_DPKG_useUnsafeIO
 		
 		DF_FSTAB_addOptions
 		
