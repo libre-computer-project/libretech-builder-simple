@@ -1,4 +1,4 @@
-. $LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg.sh
+. $LBS_VENDOR_PATH/$VENDOR_PATH/encrypt.sh
 
 sudo mkfs.vfat -F 32 ${loop_dev}p1
 local loop_mnt="$(mktemp -d)"
