@@ -151,6 +151,21 @@ LBS_buildUBoot(){
 	fi
 	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j
 }
+LBS_finalize(){
+	if [ ! -z "$AML_ENCRYPT" ]; then
+		. $LBS_VENDOR_PATH/$VENDOR_PATH/encrypt.sh
+	elif [ ! -z "$AML_GXLIMG" ]; then
+		. $LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg.sh
+	fi
+	LBS_finalizeUBoot
+	if [ ! -z "$SPIFLASH" ]; then
+		LBS_makeSPIFlashImage
+	elif [ ! -z "$MBRUEFI" ]; then
+		LBS_makeMBRUEFI
+	else
+		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
+	fi
+}
 LBS_makeSPIFlashImage(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
 		mkdir -p "$LBS_OUT_PATH"
@@ -229,8 +244,4 @@ if [ "$LBS_OPTEE" -eq 1 ]; then
 fi
 LBS_getUBoot
 LBS_buildUBoot
-if [ ! -z "$SPIFLASH" ]; then
-	LBS_makeSPIFlashImage
-elif [ ! -z "$MBRUEFI" ]; then
-	LBS_makeMBRUEFI
-fi
+LBS_finalize

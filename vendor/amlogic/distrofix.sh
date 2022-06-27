@@ -3,6 +3,7 @@
 set -e
 
 FILE_OS_RELEASE=/etc/os-release
+FILE_DISTRO_DEBIAN_VERSION=/etc/debian_version
 STRING_DISTRO_DEBIAN=debian
 STRING_DISTRO_DEBIAN_BULLSEYE_ID=bullseye
 STRING_DISTRO_DEBIAN_BULLSEYE_VERSION=11
@@ -22,15 +23,36 @@ DF_NET_add(){
 		fi
 	fi
 }
+DF_DHCP_reduceWait(){
+	local FILE_DHCP_CLIENT="/etc/dhcp/dhclient.conf"
+	local STRING_DHCP_CLIENT_TIMEOUT_SED="s/^#?(timeout\\s+)[0-9]+/\\130/"
+	local STRING_DHCP_CLIENT_RETRY_SED="s/^#?(retry\\s+)[0-9]+/\\130/"
+	if [ -f "$FILE_DHCP_CLIENT" ]; then
+		if sed -Ei "$STRING_DHCP_CLIENT_TIMEOUT_SED" "$FILE_DHCP_CLIENT"; then
+			echo "dhcp timeout reduced" >&2
+		else
+			echo "dhcp timeout failed" >&2
+			exit 1
+		fi
+		
+		if sed -Ei "$STRING_DHCP_CLIENT_RETRY_SED" "$FILE_DHCP_CLIENT"; then
+			echo "dhcp retry reduced" >&2
+		else
+			echo "dhcp retry failed" >&2
+			exit 1
+		fi
+	fi
+}
+
 DF_APT_fixSources(){
 	local FILE_APT_SOURCES=/etc/apt/sources.list
-	local STRING_APT_SOURCES_CDROM_SED="s/^deb\\s+cdrom.*/# \0\n\ndeb http:\\/\\/deb.debian.org\\/debian bullseye main contrib non-free/g"
+	local STRING_APT_SOURCES_CDROM_SED="s/^deb\\s+cdrom.*/# \0\n\ndeb http:\\/\\/deb.debian.org\\/debian $STRING_DISTRO_DEBIAN_RELEASE main/g"
 	local STRING_APT_SOURCES_UPDATE_SED="s/^#?\\s*(deb\\s+http.*)\\s+(main)/\\1 \\2 contrib non-free/g"
 	if [ -f "$FILE_APT_SOURCES" ]; then
 		if sed -Ei "$STRING_APT_SOURCES_CDROM_SED" "$FILE_APT_SOURCES"; then
-			echo "apt cdrom repo disabled and bullseye main enabled" >&2
+			echo "apt cdrom repo disabled and $STRING_DISTRO_DEBIAN_RELEASE main enabled" >&2
 		else
-			echo "apt cdrom repo disabled and bullseye main failed" >&2
+			echo "apt cdrom repo disabled and $STRING_DISTRO_DEBIAN_RELEASE main failed" >&2
 			exit 1
 		fi
 		
@@ -40,15 +62,6 @@ DF_APT_fixSources(){
 			echo "apt security and updates repo failed" >&2
 			exit 1
 		fi
-	fi
-}
-DF_DPKG_useUnsafeIO(){
-	local STRING_DPKG_FORCE_UNSAFE_IO="/etc/dpkg/dpkg.cfg.d/force-unsafe-io"
-	if echo "${STRING_DPKG_FORCE_UNSAFE_IO##*/}" > "$STRING_DPKG_FORCE_UNSAFE_IO"; then
-		echo "dpkg force-unsafe-io enabled" >&2
-	else
-		echo "dpkg force-unsafe-io failed" >&2
-		exit 1
 	fi
 }
 DF_FSTAB_addOptions(){
@@ -158,27 +171,33 @@ if [ -f "$FILE_OS_RELEASE" ]; then
 	. "$FILE_OS_RELEASE"
 fi
 if [ ! -z "$ID" -a "$ID" = "$STRING_DISTRO_DEBIAN" ]; then
-	echo -n "Debian "
+	echo -n "Debian " >&2
 	if [ ! -z "VERSION_ID" -a "$VERSION_ID" = "$STRING_DISTRO_DEBIAN_BULLSEYE_VERSION" ]; then
-		echo "$STRING_DISTRO_DEBIAN_BULLSEYE_VERSION $STRING_DISTRO_DEBIAN_BULLSEYE_ID detected"
-		
-		DF_NET_add
-		
-		DF_APT_fixSources
-		DF_DPKG_useUnsafeIO
-		
-		DF_FSTAB_addOptions
-		
-		if DF_DISK_isEMMCRoot; then
-			DF_DISK_convertGPTtoMBR "$STRING_EMMC"
-			DF_BOOT_install "$STRING_EMMC"
+		echo "$STRING_DISTRO_DEBIAN_BULLSEYE_VERSION $STRING_DISTRO_DEBIAN_BULLSEYE_ID detected" >&2
+		STRING_DISTRO_DEBIAN_RELEASE="$STRING_DISTRO_DEBIAN_BULLSEYE_ID"
+	elif [ -f "$FILE_DISTRO_DEBIAN_VERSION" ]; then	
+		debian_version=$(cat "$FILE_DISTRO_DEBIAN_VERSION")
+		if [ $debian_version = "bookworm/sid" ]; then
+			echo "bookworm 12 sid detected" >&2
+			STRING_DISTRO_DEBIAN_RELEASE=bookworm
+		else
+			echo "unsupported detected" >&2
 		fi
-		
-		DF_GRUB_install
-		
-		echo "Distro fixes applied" >&2
 	else
 		echo "unsupported detected" >&2
 		exit 1
 	fi
+	DF_NET_add
+	DF_DHCP_reduceWait
+	DF_APT_fixSources
+	
+	DF_FSTAB_addOptions
+		
+	if DF_DISK_isEMMCRoot; then
+		DF_DISK_convertGPTtoMBR "$STRING_EMMC"
+		DF_BOOT_install "$STRING_EMMC"
+	fi
+		
+	DF_GRUB_install
+	echo "Distro fixes applied" >&2
 fi
