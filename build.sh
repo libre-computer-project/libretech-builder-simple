@@ -154,10 +154,11 @@ LBS_buildUBoot(){
 LBS_finalize(){
 	if [ ! -z "$AML_ENCRYPT" ]; then
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/encrypt.sh
+		LBS_finalizeUBoot
 	elif [ ! -z "$AML_GXLIMG" ]; then
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg.sh
+		LBS_finalizeUBoot
 	fi
-	LBS_finalizeUBoot
 	if [ ! -z "$SPIFLASH" ]; then
 		LBS_makeSPIFlashImage
 	elif [ ! -z "$MBRUEFI" ]; then

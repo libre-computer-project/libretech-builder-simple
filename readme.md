@@ -13,6 +13,8 @@ out/BOARD_TARGET is an image that will update the SPI NOR of the board if you wr
 
 Replace "BOARD_TARGET" and "null" to the proper file and block device respectively. Be careful!
 
+To configure u-boot, set LBS_UBOOT_MENUCONFIG=1.
+
 ## More Information
 
 ROC-RK3399-PC is supported by Linux 5.18 or higher. Prior to 5.18, there are some issues with USB and MicroSD.
@@ -28,3 +30,4 @@ ROC-RK3399-PC is supported by Linux 5.18 or higher. Prior to 5.18, there are som
 
 ### U-Boot
 [Building and Flashing U-Boot for Rockchip SoCs](https://u-boot.readthedocs.io/en/latest/board/rockchip/rockchip.html?highlight=rockchip#building)
+
