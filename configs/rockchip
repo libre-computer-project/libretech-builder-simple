@@ -1,1 +1,3 @@
 VENDOR_PATH=rockchip
+
+LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-rockchip.bin"

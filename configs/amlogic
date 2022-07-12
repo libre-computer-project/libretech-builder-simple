@@ -1,1 +1,3 @@
 VENDOR_PATH=amlogic
+
+LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-amlogic.bin"
