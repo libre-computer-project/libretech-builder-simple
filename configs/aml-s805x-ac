@@ -1,7 +1,5 @@
 BOARD_NAME=aml-s805x-ac
 
-. configs/atf
-
 . configs/amlogic-gxl
 
 LBS_OPTEE=0

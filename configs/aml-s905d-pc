@@ -1,7 +1,5 @@
 BOARD_NAME=aml-s905d-pc
 
-. configs/atf
-
 . configs/amlogic-gxl
 
 LBS_OPTEE=0
