@@ -1,0 +1,2 @@
+CRUST_GIT_URL='https://github.com/crust-firmware/crust.git'
+CRUST_GIT_BRANCH=master

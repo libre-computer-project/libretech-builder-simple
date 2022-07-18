@@ -1,0 +1,12 @@
+BOARD_NAME=all-h3-cc-h5
+
+. configs/allwinner-h5
+
+LBS_CRUST=1
+CRUST_TARGET=libretech_all_h3_cc_h5_defconfig
+
+LBS_OPTEE=0
+
+UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_GIT_BRANCH=u-boot/v2022.07/master
+UBOOT_TARGET=libretech_all_h3_cc_h5_defconfig

@@ -23,6 +23,12 @@ LBS_downloadGCC(){
 		wget "https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/aarch64-linux-gnu/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz"
 		tar -xf gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu.tar.xz
 	fi
+	if [ "$LBS_CRUST" -eq 1 ]; then
+		if [ ! -d "or1k-linux-musl-cross" ]; then
+			wget "http://musl.cc/or1k-linux-musl-cross.tgz"
+			tar -xf or1k-linux-musl-cross.tgz
+		fi
+	fi
 	if [ "$LBS_OPTEE" -eq 1 ]; then
 		if [ ! -d "gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf" ]; then
 			wget "https://releases.linaro.org/components/toolchain/binaries/7.3-2018.05/arm-linux-gnueabihf/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf.tar.xz"
@@ -33,9 +39,14 @@ LBS_downloadGCC(){
 }
 LBS_exportGCCPATH(){
 	cd "$LBS_GCC_PATH"
-	export PATH=$PWD/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin:$PATH
+	if [ "$LBS_ARCH" = "arm64" ]; then
+		export PATH=$PWD/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin:$PATH
+		export PATH=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin:$PATH
+	fi
 	export PATH=$PWD/gcc-arm-none-eabi-7-2018-q2-update/bin:$PATH
-	export PATH=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_aarch64-linux-gnu/bin:$PATH
+	if [ "$LBS_CRUST" -eq 1 ]; then
+		export PATH=$PWD/or1k-linux-musl-cross/bin:$PATH
+	fi
 	if [ "$LBS_OPTEE" -eq 1 ]; then
 		export PATH=$PWD/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin:$PATH
 	fi
@@ -69,8 +80,20 @@ LBS_getATF(){
 	fi
 }
 LBS_buildATF(){
-	CROSS_COMPILE=aarch64-elf- make -C "$LBS_ATF_PATH" distclean
-	CROSS_COMPILE=aarch64-elf- make -C "$LBS_ATF_PATH" -j PLAT=$ATF_PLAT DEBUG=0 $ATF_TARGET
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" distclean
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" -j$(nproc) PLAT=$ATF_PLAT DEBUG=0 $ATF_TARGET
+}
+LBS_getCrust(){
+	if [ -d "$LBS_CRUST_PATH" ]; then
+		LBS_GIT_switchBranch "$LBS_CRUST_PATH" "$CRUST_GIT_BRANCH"
+	else
+		git clone --single-branch --depth 1 -b "$CRUST_GIT_BRANCH" "$CRUST_GIT_URL" "$LBS_CRUST_PATH"
+	fi
+}
+LBS_buildCrust(){
+	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" distclean
+	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" $CRUST_TARGET
+	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" -j$(nproc) scp
 }
 LBS_getEDK2(){
 	mkdir -p "$LBS_EDK2_PATH"
@@ -109,7 +132,7 @@ LBS_getOPTEE(){
 }
 LBS_buildOPTEE(){
 	#ln -s "$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" "$LBS_OPTEE_PATH" 
-	ARCH=arm CROSS_COMPILE32=arm-linux-gnueabihf- make -C "$LBS_OPTEE_PATH" -j`nproc` \
+	ARCH=arm CROSS_COMPILE32=arm-linux-gnueabihf- make -C "$LBS_OPTEE_PATH" -j$(nproc) \
 		CFG_ARM64_core=y PLATFORM=$OPTEE_PLAT CFG_STMM_PATH="$PWD/$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" \
 		CFG_RPMB_FS=y CFG_RPMB_FS_DEV_ID=0 CFG_CORE_HEAP_SIZE=524288 \
 		CFG_RPMB_WRITE_KEY=y CFG_CORE_HEAP_SIZE=524288 CFG_CORE_DYN_SHM=y \
@@ -125,12 +148,22 @@ LBS_getUBoot(){
 	fi
 }
 LBS_buildUBoot(){
-	BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_OUTPUT_FILE
-	if [ ! -f "$BL31" ]; then
-		echo "$FUNCNAME BL31 missing?"
-		exit 1
+	if [ "$LBS_ATF" -eq 1 ]; then
+		BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_OUTPUT_FILE
+		if [ ! -f "$BL31" ]; then
+			echo "$FUNCNAME BL31 missing?"
+			exit 1
+		fi
+		export BL31
 	fi
-	export BL31
+	if [ "$LBS_CRUST" -eq 1 ]; then
+		SCP="$(readlink -f "$LBS_CRUST_PATH")"/build/scp/scp.bin
+		if [ ! -f "$SCP" ]; then
+			echo "$FUNCNAME SCP missing?"
+			exit 1
+		fi
+		export SCP
+	fi
 	if [ "$LBS_OPTEE" -eq 1 ]; then
 		TEE="$(readlink -f "$LBS_OPTEE_PATH")"/out/arm-plat-$OPTEE_PLATELF_DIR/core/tee.elf
 		if [ ! -f "$TEE" ]; then
@@ -139,17 +172,17 @@ LBS_buildUBoot(){
 		fi
 		export TEE
 	fi
-	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" distclean
-	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j $UBOOT_TARGET
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" distclean
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) $UBOOT_TARGET
 	if [ ! -z "$LBS_UBOOT_MENUCONFIG" ]; then
-		CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j menuconfig
+		CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) menuconfig
 		read -n 1 -p "$FUNCNAME save config to defconfig? (y/N)" save
 		if [ "${save,,}" = y ]; then
-			CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j savedefconfig
+			CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) savedefconfig
 			mv "$LBS_UBOOT_PATH"/defconfig "$LBS_UBOOT_PATH"/configs/$UBOOT_TARGET
 		fi
 	fi
-	CROSS_COMPILE=aarch64-elf- make -C "$LBS_UBOOT_PATH" -j
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }
 LBS_finalize(){
 	if [ ! -z "$AML_ENCRYPT" ]; then
@@ -235,8 +268,14 @@ fi
 
 LBS_downloadGCC
 LBS_exportGCCPATH
-LBS_getATF
-LBS_buildATF
+if [ "$LBS_ATF" -eq 1 ]; then
+	LBS_getATF
+	LBS_buildATF
+fi
+if [ "$LBS_CRUST" -eq 1 ]; then
+	LBS_getCrust
+	LBS_buildCrust
+fi
 if [ "$LBS_OPTEE" -eq 1 ]; then
 	LBS_getEDK2
 	LBS_buildEDK2

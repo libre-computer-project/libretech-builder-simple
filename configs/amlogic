@@ -1,3 +1,12 @@
 VENDOR_PATH=amlogic
 
 LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-amlogic.bin"
+
+LBS_ARCH=arm64
+LBS_CC=aarch64-elf-
+
+LBS_ATF=1
+
+. configs/atf
+
+LBS_CRUST=0

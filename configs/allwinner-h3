@@ -1,0 +1,8 @@
+. configs/allwinner
+
+LBS_ATF=0
+
+. configs/crust
+
+LBS_ARCH=armhf
+LBS_CC=arm-none-eabi-

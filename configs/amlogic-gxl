@@ -1,7 +1,5 @@
 . configs/amlogic
 
-. configs/atf
-
 ATF_PLAT=gxl
 ATF_TARGET=bl31
 ATF_OUTPUT_FILE=bl31.bin

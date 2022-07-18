@@ -1,0 +1,14 @@
+. configs/allwinner
+
+. configs/atf
+
+ATF_PLAT=sun50i_a64
+ATF_TARGET=bl31
+ATF_OUTPUT_FILE=bl31.bin
+
+LBS_ATF=1
+
+. configs/crust
+
+LBS_ARCH=arm64
+LBS_CC=aarch64-elf-

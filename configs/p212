@@ -1,11 +1,13 @@
-BOARD_NAME=aml-s905x-cc
+BOARD_NAME=p212
+
+. configs/atf
 
 . configs/amlogic-gxl
 
 LBS_OPTEE=0
 
 UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=u-boot/v2022.07/aml-s905x-cc
-UBOOT_TARGET=libretech-cc_defconfig
+UBOOT_GIT_BRANCH=u-boot/v2022.07/master
+UBOOT_TARGET=p212_defconfig
 
 AML_ENCRYPT=gxl

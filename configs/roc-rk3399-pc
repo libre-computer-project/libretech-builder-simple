@@ -1,7 +1,5 @@
 BOARD_NAME=roc-rk3399-pc
 
-. configs/atf
-
 . configs/rockchip-rk3399
 
 LBS_OPTEE=0
