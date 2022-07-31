@@ -63,8 +63,8 @@ LBS_GIT_switchBranch(){
 			echo "$FUNCNAME cannot switch branch when there are uncommited files."
 			return 1
 		fi
-		local branch_exi=$(git -C "$path_tar" branch --list "$branch_tar")
-		if [ -z "$branch_exi" ]; then
+		local branch_exist=$(git -C "$path_tar" branch --list "$branch_tar")
+		if [ -z "$branch_exist" ]; then
 			git -C "$path_tar" fetch --depth=1 "$LBS_GIT_REMOTE_DEFAULT" "$branch_tar"
 			git -C "$path_tar" checkout -b "$branch_tar" FETCH_HEAD
 		else
@@ -199,6 +199,7 @@ LBS_finalize(){
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
 	fi
+	cp "$LBS_UBOOT_PATH"/.config "$LBS_OUT_PATH/${LBS_TARGET}.config"
 }
 LBS_makeSPIFlashImage(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
