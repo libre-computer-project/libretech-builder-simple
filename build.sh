@@ -175,12 +175,18 @@ LBS_buildUBoot(){
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" distclean
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) $UBOOT_TARGET
 	if [ ! -z "$LBS_UBOOT_MENUCONFIG" ]; then
-		CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) menuconfig
-		read -n 1 -p "$FUNCNAME save config to defconfig? (y/N)" save
-		if [ "${save,,}" = y ]; then
-			CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) savedefconfig
-			mv "$LBS_UBOOT_PATH"/defconfig "$LBS_UBOOT_PATH"/configs/$UBOOT_TARGET
-		fi
+		while true; do
+			CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) menuconfig
+			read -n 1 -p "$FUNCNAME save config to defconfig? (y/N)" save
+			if [ "${save,,}" = y ]; then
+				CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc) savedefconfig
+				mv "$LBS_UBOOT_PATH"/defconfig "$LBS_UBOOT_PATH"/configs/$UBOOT_TARGET
+			fi
+			read -n 1 -p "$FUNCNAME again?" again
+			if [ "${again,,}" != "y" ]; then
+				break;
+			fi
+		done
 	fi
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }
@@ -198,9 +204,14 @@ LBS_finalize(){
 		LBS_makeMBRUEFI
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
+		if [ "${LBS_TARGET%%-*}" = "aml" ]; then
+			dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.bl2" bs=49152 count=1
+			dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.tpl" skip=49152 bs=1
+		fi
 	fi
 	cp "$LBS_UBOOT_PATH"/.config "$LBS_OUT_PATH/${LBS_TARGET}.config"
 	cp "$LBS_UBOOT_PATH"/u-boot.dtb "$LBS_OUT_PATH/${LBS_TARGET}.dtb"
+	dtc -I dtb -O dts "$LBS_UBOOT_PATH/u-boot.dtb" -o "$LBS_OUT_PATH/${LBS_TARGET}.dts"
 }
 LBS_makeSPIFlashImage(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
