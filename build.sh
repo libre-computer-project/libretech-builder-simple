@@ -147,6 +147,14 @@ LBS_getUBoot(){
 		git clone --single-branch --depth 1 -b "$UBOOT_GIT_BRANCH" "$UBOOT_GIT_URL" "$LBS_UBOOT_PATH"
 	fi
 }
+LBS_checkUBootConfig(){
+	echo $PWD
+	if [ -z "$LBS_UBOOT_CFGCHECK" ]; then
+		while read -r line; do
+			grep "^$line" $1
+		done < vendor/libre-computer/u-boot_configs
+	fi
+}
 LBS_buildUBoot(){
 	if [ "$LBS_ATF" -eq 1 ]; then
 		BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_OUTPUT_FILE
@@ -188,6 +196,7 @@ LBS_buildUBoot(){
 			fi
 		done
 	fi
+	LBS_checkUBootConfig "$LBS_UBOOT_PATH"/.config
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }
 LBS_finalize(){
