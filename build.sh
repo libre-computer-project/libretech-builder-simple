@@ -149,7 +149,7 @@ LBS_getUBoot(){
 }
 LBS_checkUBootConfig(){
 	echo $PWD
-	if [ -z "$LBS_UBOOT_CFGCHECK" ]; then
+	if [ ! -z "$LBS_UBOOT_CFGCHECK" ]; then
 		while read -r line; do
 			grep "^$line" $1
 		done < vendor/libre-computer/u-boot_configs
