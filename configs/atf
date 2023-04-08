@@ -1,2 +1,2 @@
-ATF_GIT_URL='https://github.com/ARM-software/arm-trusted-firmware.git'
+ATF_GIT_URL='https://github.com/libre-computer-project/arm-trusted-firmware.git'
 ATF_GIT_BRANCH=master
