@@ -200,6 +200,9 @@ LBS_buildUBoot(){
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }
 LBS_finalize(){
+	if [ ! -d "$LBS_OUT_PATH" ]; then
+		mkdir -p "$LBS_OUT_PATH"
+	fi
 	if [ ! -z "$AML_ENCRYPT" ]; then
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/encrypt.sh
 		LBS_finalizeUBoot
