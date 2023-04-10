@@ -38,9 +38,11 @@ To configure u-boot, set LBS_UBOOT_MENUCONFIG=1.
 
 ### ARM Trusted Firmware
 [ARM Trusted Firmware Documentation](https://trustedfirmware-a.readthedocs.io/en/latest/plat/index.html)
+[ARM Trusted Firmware Design](https://trustedfirmware-a.readthedocs.io/en/latest/design/firmware-design.html)
 
 ### U-Boot
 [U-Boot Documentation](https://u-boot.readthedocs.io/en/latest/board/index.html)
+[U-Boot Usage](https://u-boot.readthedocs.io/en/latest/usage/index.html)
 
 ### OPTEE
 [StandAloneMM from EDK2 in OPTEE OS](https://optee.readthedocs.io/en/latest/building/efi_vars/stmm.html)
