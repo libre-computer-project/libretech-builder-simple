@@ -6,8 +6,6 @@ LBS_OPTEE=0
 
 UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_GIT_BRANCH=v2023.04/aml-s805x-ac
-UBOOT_TARGET=libretech-ac_defconfig
+UBOOT_TARGET=libretech-ac_min_defconfig
 
 AML_ENCRYPT=gxl
-
-. configs/spiflash
