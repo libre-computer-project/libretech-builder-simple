@@ -309,8 +309,34 @@ fi
 
 . "configs/$LBS_TARGET"
 
-LBS_downloadGCC
-LBS_exportGCCPATH
+if [ "$HOSTTYPE" = "aarch64" ]; then
+	# On AArch64 hosts, we don't download 3rd party toolchains.
+	# Instead, we use the ones that come from the distribution.
+	if ! command -v arm-linux-gnueabihf-gcc >/dev/null 2>&1; then
+		echo "Please install a local armhf toolchain:"
+		echo "  $ apt install gcc-arm-linux-gnueabihf"
+		exit 1
+	fi
+	if [ "$LBS_CC" = "aarch64-elf-" ]; then
+		# Use the system Linux cross toolchain instead, elf is not
+		# always available
+		LBS_CC=aarch64-linux-gnu-gcc
+		if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
+			echo "Please install a local aarch64 toolchain:"
+			echo "  $ apt install gcc
+			exit 1
+		fi
+	elif [ "$LBS_CC" = "arm-none-eabi-" ]; then
+		if ! command -v arm-none-eabi-gcc >/dev/null 2>&1; then
+			echo "Please install a local arm-none toolchain:"
+			echo "  $ apt install gcc-arm-none-eabi"
+			exit 1
+		fi
+	fi
+else
+	LBS_downloadGCC
+	LBS_exportGCCPATH
+fi
 if [ "$LBS_ATF" -eq 1 ]; then
 	LBS_getATF
 	LBS_buildATF
