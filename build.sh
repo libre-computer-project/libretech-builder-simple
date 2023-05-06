@@ -56,7 +56,9 @@ LBS_GIT_switchBranch(){
 	local path_tar="$1"
 	local branch_tar="$2"
 	local branch_cur=$(git -C "$path_tar" branch --show-current)
-	if [ "$branch_cur" != "$branch_tar" ]; then
+	if [ "$branch_cur" = "" ]; then
+		echo "$FUNCNAME not switching due to bisect."
+	elif [ "$branch_cur" != "$branch_tar" ]; then
 		#check for modified tracked
 		local files_unc=$(git -C "$path_tar" status -s | grep -v '^??')
 		if [ ! -z "$files_unc" ]; then
