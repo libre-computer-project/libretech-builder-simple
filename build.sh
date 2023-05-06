@@ -323,7 +323,7 @@ if [ "$HOSTTYPE" = "aarch64" ]; then
 		LBS_CC=aarch64-linux-gnu-gcc
 		if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
 			echo "Please install a local aarch64 toolchain:"
-			echo "  $ apt install gcc
+			echo "  $ apt install gcc"
 			exit 1
 		fi
 	elif [ "$LBS_CC" = "arm-none-eabi-" ]; then
