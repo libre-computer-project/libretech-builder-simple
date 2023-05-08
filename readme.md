@@ -1,38 +1,50 @@
 # libretech-builder-simple
 
-This is a simple bootloader builder for Libre Computer boards.
+## Purpose
+
+Builds bootloaders for Libre Computer boards.
+
+## Prerequisites
+
+Linux machine or virtual machine
 
 ## Usage
 
-	sudo ./setup.sh #install pre-requisites via apt
+```
+#install pre-requisites via apt or yum
+sudo ./setup.sh
 
-	git clone --single-branch --depth 1 https://github.com/libre-computer-project/libretech-builder-simple.git
-	./build.sh BOARD_TARGET # eg. ./build.sh roc-rk3399-pc
+git clone --single-branch --depth 1 https://github.com/libre-computer-project/libretech-builder-simple.git
 
-The default output directory is out/ and is set by LBS_OUT_PATH in configs/build.
+./build.sh BOARD_TARGET
 
-The default board bootloader target is for MMC boot. The output bootloader needs to be written to the [correct disk sector](https://github.com/libre-computer-project/libretech-flash-tool/blob/master/lib/bootloader.sh#L5).
+#To configure u-boot, set LBS_UBOOT_MENUCONFIG=1.
+LBS_UBOOT_MENUCONFIG=1 ./build.sh BOARD_TARGET
+```
+
+## Board Targets
+
+* all-h3-cc-h3
+* all-h3-cc-h5
+* aml-s805x-ac
+* aml-s905x-cc
+* aml-s905x-cc-v2
+* aml-s905d-pc
+* roc-rk3328-cc
+* roc-rk3399-pc
+
+## Bootloader Flashing
+
+Default output directory is out/ and is set by LBS_OUT_PATH in configs/build.
+
+Output bootloader needs to be written to the [correct disk sector](https://github.com/libre-computer-project/libretech-flash-tool/blob/master/lib/bootloader.sh#L5).
 
 For boards with SPI NOR, there is a separate board bootloader target ending with -spiflash.
 To flash SPI NOR, dump the output image to a MMC device and the board will boot and flash the SPI NOR.
 
-	sudo dd if=out/BOARD_TARGET-spiflash of=/dev/null bs=1M
+`sudo dd if=out/BOARD_TARGET-spiflash of=/dev/null bs=1M`
 
-Replace "BOARD_TARGET" and "null" to the proper file and block device respectively. Be careful not to overwrite the wrong block device!
-
-To configure u-boot, set LBS_UBOOT_MENUCONFIG=1.
-
-## Boards Supported
-
-* ALL-H3-CC-H3
-* ALL-H3-CC-H5
-* AML-S805X-AC
-* AML-S905X-AC
-* AML-S905X-CC-V2
-* AML-S905D-PC
-* ROC-RK3328-CC
-* ROC-RK3328-CC-V2
-* ROC-RK3399-PC
+Replace "BOARD_TARGET" and "null" to the proper file and block device respectively. **Be careful not to overwrite the wrong block device!**
 
 ## More Information
 
