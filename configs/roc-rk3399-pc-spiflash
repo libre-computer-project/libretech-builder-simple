@@ -8,6 +8,4 @@ UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_GIT_BRANCH=v2023.04/roc-rk3399-pc
 UBOOT_TARGET=roc-pc-rk3399_defconfig
 
-SPIFLASH_MKIMAGE_NAME=rk3399
-
 . configs/spiflash

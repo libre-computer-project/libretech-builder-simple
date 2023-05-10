@@ -23,5 +23,4 @@ UBOOT_TARGET=roc-pc-rk3399_optee_defconfig
 
 . configs/rockchip
  
-SPIFLASH_MKIMAGE_NAME=rk3399
 . configs/spiflash
