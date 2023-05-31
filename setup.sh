@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if which apt; then
-	sudo apt install build-essential flex bison python3-setuptools swig python3-dev libssl-dev u-boot-tools python3-pyelftools git libcurses-dev
+	sudo apt install build-essential flex bison python3-setuptools swig python3-dev libssl-dev u-boot-tools python3-pyelftools git libncurses-dev
 elif which yum; then
 	sudo yum groupinstall 'Development Tools'
 	sudo yum install python3-setuptools swig python3-devel openssl-devel uboot-tools python3-pyelftools git ncurses-devel
