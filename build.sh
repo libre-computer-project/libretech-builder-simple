@@ -153,8 +153,8 @@ else
 	LBS_GCC_exportPATH
 fi
 if [ "$LBS_ATF" -eq 1 ]; then
-	LBS_getATF
-	LBS_buildATF
+	LBS_ATF_get
+	LBS_ATF_build
 fi
 if [ "$LBS_CRUST" -eq 1 ]; then
 	LBS_getCrust
