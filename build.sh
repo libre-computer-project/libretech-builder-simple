@@ -163,8 +163,8 @@ fi
 if [ "$LBS_OPTEE" -eq 1 ]; then
 	LBS_EDK2_get
 	LBS_EDK2_build
-	LBS_getOPTEE
-	LBS_buildOPTEE
+	LBS_OPTEE_get
+	LBS_OPTEE_build
 fi
 LBS_getUBoot
 LBS_buildUBoot

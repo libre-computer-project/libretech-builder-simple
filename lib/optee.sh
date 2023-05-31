@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LBS_getOPTEE(){
+LBS_OPTEE_get(){
 	if [ -d "$LBS_OPTEE_PATH" ]; then
 		LBS_GIT_switchBranch "$LBS_OPTEE_PATH" "$OPTEE_GIT_BRANCH"
 	else
@@ -8,7 +8,7 @@ LBS_getOPTEE(){
 	fi
 }
 
-LBS_buildOPTEE(){
+LBS_OPTEE_build(){
 	#ln -s "$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" "$LBS_OPTEE_PATH" 
 	ARCH=arm CROSS_COMPILE32=arm-linux-gnueabihf- make -C "$LBS_OPTEE_PATH" -j$(nproc) \
 		CFG_ARM64_core=y PLATFORM=$OPTEE_PLAT CFG_STMM_PATH="$PWD/$LBS_EDK2_PATH/Build/MmStandaloneRpmb/RELEASE_GCC5/FV/BL32_AP_MM.fd" \
