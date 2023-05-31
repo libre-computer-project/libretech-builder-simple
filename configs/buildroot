@@ -1,0 +1,2 @@
+BR2_GIT_URL='https://github.com/libre-computer-project/libretech-buildroot.git'
+LBS_BR2=1

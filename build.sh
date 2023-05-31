@@ -13,6 +13,7 @@ cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 . lib/edk2.sh
 . lib/optee.sh
 . lib/u-boot.sh
+. lib/buildroot.sh
 
 LBS_finalize(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
@@ -29,6 +30,8 @@ LBS_finalize(){
 		LBS_makeSPIFlashImage
 	elif [ ! -z "$MBRUEFI" ]; then
 		LBS_makeMBRUEFI
+	elif [ ! -z "$LBS_BR2" ]; then
+		LBS_BR2_build
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
 		local target_size=$(stat --printf="%s" "$LBS_OUT_PATH/$LBS_TARGET")
@@ -168,4 +171,7 @@ if [ "$LBS_OPTEE" -eq 1 ]; then
 fi
 LBS_UBOOT_get
 LBS_UBOOT_build
+if [ "$LBS_BR2" -eq 1 ]; then
+	LBS_BR2_get
+fi
 LBS_finalize
