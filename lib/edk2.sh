@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LBS_getEDK2(){
+LBS_EDK2_get(){
 	mkdir -p "$LBS_EDK2_PATH"
 	if [ -d "$LBS_EDK2BASE_PATH" ]; then
 		LBS_GIT_switchBranch "$LBS_EDK2BASE_PATH" "$EDK2_GIT_BRANCH"
@@ -16,7 +16,7 @@ LBS_getEDK2(){
 	git -C "$LBS_EDK2BASE_PATH" submodule update --init --recursive --single-branch --depth 1 
 }
 
-LBS_buildEDK2(){
+LBS_EDK2_build(){
 	LBS_EDK2BASE_PATH_ABS="$(readlink -f $LBS_EDK2BASE_PATH)"
 	LBS_EDK2PLAT_PATH_ABS="$(readlink -f $LBS_EDK2PLAT_PATH)"
 	cd "$LBS_EDK2_PATH"

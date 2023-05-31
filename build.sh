@@ -161,8 +161,8 @@ if [ "$LBS_CRUST" -eq 1 ]; then
 	LBS_CRUST_build
 fi
 if [ "$LBS_OPTEE" -eq 1 ]; then
-	LBS_getEDK2
-	LBS_buildEDK2
+	LBS_EDK2_get
+	LBS_EDK2_build
 	LBS_getOPTEE
 	LBS_buildOPTEE
 fi
