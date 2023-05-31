@@ -1,3 +1,5 @@
 VENDOR_PATH=allwinner
 
 LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-sunxi-with-spl.bin"
+
+LBS_BOOT_SECTOR=16

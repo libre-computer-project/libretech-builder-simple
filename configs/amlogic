@@ -10,3 +10,5 @@ LBS_ATF=1
 . configs/atf
 
 LBS_CRUST=0
+
+LBS_BOOT_SECTOR=1

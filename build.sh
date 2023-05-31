@@ -37,22 +37,21 @@ LBS_finalize(){
 		local target_size=$(stat --printf="%s" "$LBS_OUT_PATH/$LBS_TARGET")
 		case "${LBS_TARGET%%-*}" in
 			all)
-				local start_sector=16
+				:
 				;;
 			aml)
-				local start_sector=1
 				dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.bl2" bs=49152 count=1
 				dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.tpl" skip=49152 bs=1
 				;;
 			roc)
-				local start_sector=64
+				:
 				;;
 			*)
 				echo "Unknown vendor: ${LBS_TARGET%%-*}"
 				return 1
 				;;
 		esac
-		local target_max=$((1024*1024-(start_sector*512)-0x10000))
+		local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)-0x10000))
 		if [ "$target_size" -gt "$target_max" ]; then
 			echo "WARNING: Target size ${target_size}B exceeds ${target_max}B"
 		fi
