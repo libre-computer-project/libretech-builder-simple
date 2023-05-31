@@ -42,20 +42,19 @@ LBS_finalize(){
 				:
 				;;
 			aml)
-				dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.bl2" bs=49152 count=1
-				dd if="$LBS_UBOOT_BIN_FINAL_PATH" of="$LBS_OUT_PATH/$LBS_TARGET.usb.tpl" skip=49152 bs=1
+				:
 				;;
 			roc)
 				:
 				;;
 			*)
-				echo "Unknown vendor: ${LBS_TARGET%%-*}"
+				echo "$FUNCNAME: unknown vendor: ${LBS_TARGET%%-*}" >&2
 				return 1
 				;;
 		esac
 		local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)-0x10000))
 		if [ "$target_size" -gt "$target_max" ]; then
-			echo "WARNING: Target size ${target_size}B exceeds ${target_max}B"
+			echo "$FUNCNAME: WARNING: Target size ${target_size}B exceeds ${target_max}B" >&2
 		fi
 	fi
 	cp "$LBS_UBOOT_PATH"/.config "$LBS_OUT_PATH/${LBS_TARGET}.config"
