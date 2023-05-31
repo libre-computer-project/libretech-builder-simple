@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LBS_downloadGCC(){
+LBS_GCC_download(){
 	if [ ! -d "$LBS_GCC_PATH" ]; then
 		mkdir -p "$LBS_GCC_PATH"
 	fi
@@ -32,7 +32,7 @@ LBS_downloadGCC(){
 	cd "$OLDPWD"
 }
 
-LBS_exportGCCPATH(){
+LBS_GCC_exportPATH(){
 	cd "$LBS_GCC_PATH"
 	if [ "$LBS_ARCH" = "arm64" ]; then
 		export PATH=$PWD/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-elf/bin:$PATH

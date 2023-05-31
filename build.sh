@@ -149,8 +149,8 @@ if [ "$HOSTTYPE" = "aarch64" ]; then
 		fi
 	fi
 else
-	LBS_downloadGCC
-	LBS_exportGCCPATH
+	LBS_GCC_download
+	LBS_GCC_exportPATH
 fi
 if [ "$LBS_ATF" -eq 1 ]; then
 	LBS_getATF
