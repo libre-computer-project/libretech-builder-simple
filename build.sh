@@ -157,8 +157,8 @@ if [ "$LBS_ATF" -eq 1 ]; then
 	LBS_ATF_build
 fi
 if [ "$LBS_CRUST" -eq 1 ]; then
-	LBS_getCrust
-	LBS_buildCrust
+	LBS_CRUST_get
+	LBS_CRUST_build
 fi
 if [ "$LBS_OPTEE" -eq 1 ]; then
 	LBS_getEDK2
