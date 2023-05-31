@@ -21,15 +21,17 @@ LBS_finalize(){
 	fi
 	if [ ! -z "$AML_ENCRYPT" ]; then
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/encrypt.sh
-		LBS_finalizeUBoot
+		LBS_VENDOR_finalize
 	elif [ ! -z "$AML_GXLIMG" ]; then
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg.sh
-		LBS_finalizeUBoot
+		LBS_VENDOR_finalize
 	fi
-	if [ ! -z "$SPIFLASH" ]; then
-		LBS_makeSPIFlashImage
-	elif [ ! -z "$MBRUEFI" ]; then
-		LBS_makeMBRUEFI
+	if [ ! -z "$LBS_SPIFLASH" ]; then
+		. lib/spiflash.sh
+		LBS_SPIFLASH_build
+	elif [ ! -z "$LBS_MBRUEFI" ]; then
+		. lib/mbruefi.sh
+		LBS_MBRUEFI_build
 	elif [ ! -z "$LBS_BR2" ]; then
 		LBS_BR2_build
 	else
@@ -59,58 +61,6 @@ LBS_finalize(){
 	cp "$LBS_UBOOT_PATH"/.config "$LBS_OUT_PATH/${LBS_TARGET}.config"
 	cp "$LBS_UBOOT_PATH"/u-boot.dtb "$LBS_OUT_PATH/${LBS_TARGET}.dtb"
 	dtc -I dtb -O dts "$LBS_UBOOT_PATH/u-boot.dtb" -o "$LBS_OUT_PATH/${LBS_TARGET}.dts"
-}
-LBS_makeSPIFlashImage(){
-	if [ ! -d "$LBS_OUT_PATH" ]; then
-		mkdir -p "$LBS_OUT_PATH"
-	fi
-	truncate -s $SPIFLASH_DISK_SIZE "$LBS_OUT_PATH/$LBS_TARGET"
-	local loop_dev=$(sudo losetup --show -f "$LBS_OUT_PATH/$LBS_TARGET")
-	sudo fdisk $loop_dev <<EOF || true
-I
-$SPIFLASH_SFDISK
-w
-EOF
-	sync
-	sleep 1
-	sudo partprobe $loop_dev
-	if [ ! -b ${loop_dev}p1 ]; then
-		read -n 1 -p "$FUNCNAME sanity check failed, partition 1 on $loop_dev is missing, drop to shell to fix? (y/N)" fix
-		if [ "${fix,,}" = y ]; then
-			bash
-		else
-			sudo losetup -d $loop_dev
-			exit 1
-		fi
-	fi
-	. "$SPIFLASH_LOAD"
-	sudo losetup -d $loop_dev
-}
-LBS_makeMBRUEFI(){
-	if [ ! -d "$LBS_OUT_PATH" ]; then
-		mkdir -p "$LBS_OUT_PATH"
-	fi
-	truncate -s $MBRUEFI_DISK_SIZE "$LBS_OUT_PATH/$LBS_TARGET"
-	local loop_dev=$(sudo losetup --show -f "$LBS_OUT_PATH/$LBS_TARGET")
-	sudo fdisk $loop_dev <<EOF || true
-I
-$MBRUEFI_SFDISK
-w
-EOF
-	sync
-	sleep 1
-	sudo partprobe $loop_dev
-	if [ ! -b ${loop_dev}p1 ]; then
-		read -n 1 -p "$FUNCNAME sanity check failed, partition 1 on $loop_dev is missing, drop to shell to fix? (y/N)" fix
-		if [ "${fix,,}" = y ]; then
-			bash
-		else
-			sudo losetup -d $loop_dev
-			exit 1
-		fi
-	fi
-	. "$MBRUEFI_LOAD"
-	sudo losetup -d $loop_dev
 }
 if [ -z "$1" ]; then
 	echo "$0 config"

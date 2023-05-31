@@ -1,4 +1,4 @@
-LBS_finalizeUBoot(){
+LBS_VENDOR_finalize(){
 	local encrypt_path="$LBS_VENDOR_PATH/$VENDOR_PATH/aml_encrypt_${AML_ENCRYPT}"
 	
 	local blx_path="$LBS_VENDOR_PATH/$VENDOR_PATH/blx"

@@ -1,4 +1,4 @@
-LBS_finalizeUBoot(){
+LBS_VENDOR_finalize(){
 	local gxlimg_path="$LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg"
 	
 	if [ ! -d "$gxlimg_path" ]; then
