@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LBS_getUBoot(){
+LBS_UBOOT_get(){
 	if [ -d "$LBS_UBOOT_PATH" ]; then
 		LBS_GIT_switchBranch "$LBS_UBOOT_PATH" "$UBOOT_GIT_BRANCH"
 	else
@@ -8,7 +8,7 @@ LBS_getUBoot(){
 	fi
 }
 
-LBS_checkUBootConfig(){
+LBS_UBOOT_checkConfig(){
 	echo $PWD
 	if [ ! -z "$LBS_UBOOT_CFGCHECK" ]; then
 		while read -r line; do
@@ -17,7 +17,7 @@ LBS_checkUBootConfig(){
 	fi
 }
 
-LBS_buildUBoot(){
+LBS_UBOOT_build(){
 	if [ "$LBS_ATF" -eq 1 ]; then
 		BL31="$(readlink -f $LBS_ATF_PATH)"/build/$ATF_PLAT/release/$ATF_OUTPUT_FILE
 		if [ ! -f "$BL31" ]; then
@@ -58,6 +58,6 @@ LBS_buildUBoot(){
 			fi
 		done
 	fi
-	LBS_checkUBootConfig "$LBS_UBOOT_PATH"/.config
+	LBS_UBOOT_checkConfig "$LBS_UBOOT_PATH"/.config
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }

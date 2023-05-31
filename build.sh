@@ -166,6 +166,6 @@ if [ "$LBS_OPTEE" -eq 1 ]; then
 	LBS_OPTEE_get
 	LBS_OPTEE_build
 fi
-LBS_getUBoot
-LBS_buildUBoot
+LBS_UBOOT_get
+LBS_UBOOT_build
 LBS_finalize
