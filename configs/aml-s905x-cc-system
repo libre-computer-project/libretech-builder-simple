@@ -10,7 +10,7 @@ UBOOT_TARGET=libretech-cc_defconfig
 
 AML_ENCRYPT=gxl
 
-BR2_GIT_BRANCH='2023.02.x/aml-s905x-cc'
+BR2_GIT_BRANCH='2023.02.x/amlogic'
 BR2_TARGET=aml-s905x-cc_defconfig
 
 . configs/buildroot
