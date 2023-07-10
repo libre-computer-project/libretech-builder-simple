@@ -103,15 +103,15 @@ else
 	LBS_GCC_download
 	LBS_GCC_exportPATH
 fi
-if [ "$LBS_ATF" -eq 1 ]; then
+if [ ! -z "$LBS_ATF" ] && [ "$LBS_ATF" -eq 1 ]; then
 	LBS_ATF_get
 	LBS_ATF_build
 fi
-if [ "$LBS_CRUST" -eq 1 ]; then
+if [ ! -z "$LBS_CRUST" ] && [ "$LBS_CRUST" -eq 1 ]; then
 	LBS_CRUST_get
 	LBS_CRUST_build
 fi
-if [ "$LBS_OPTEE" -eq 1 ]; then
+if [ ! -z "$LBS_OPTEE" ] && [ "$LBS_OPTEE" -eq 1 ]; then
 	LBS_EDK2_get
 	LBS_EDK2_build
 	LBS_OPTEE_get
@@ -119,7 +119,7 @@ if [ "$LBS_OPTEE" -eq 1 ]; then
 fi
 LBS_UBOOT_get
 LBS_UBOOT_build
-if [ "$LBS_BR2" -eq 1 ]; then
+if [ ! -z "$LBS_BR2" ] && [ "$LBS_BR2" -eq 1 ]; then
 	LBS_BR2_get
 fi
 LBS_finalize
