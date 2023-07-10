@@ -1,4 +1,4 @@
-sudo mkfs.vfat -F32 ${loop_dev}p1
+sudo mkfs.vfat ${loop_dev}p1
 local loop_mnt="$(mktemp -d)"
 sudo mount ${loop_dev}p1 "$loop_mnt"
 sudo cp "$LBS_UBOOT_BIN_FINAL_PATH" "$loop_mnt/u-boot.bin"
