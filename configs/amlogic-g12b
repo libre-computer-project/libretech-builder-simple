@@ -1,0 +1,6 @@
+. configs/amlogic
+
+#ATF_PLAT=g12b
+#ATF_TARGET=bl31
+#ATF_OUTPUT_FILE=bl31.bin
+
