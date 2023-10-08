@@ -1,12 +1,12 @@
-BOARD_NAME=aml-s905d3-cc-v01
+BOARD_NAME=aml-a311d-cc-v01
 
 . configs/amlogic-g12b
 
 LBS_OPTEE=0
 
 UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=v2023.07/lc-aml-s905d3-cc-v01
-UBOOT_TARGET=libretech-s905d3-cc_defconfig
+UBOOT_GIT_BRANCH=v2023.07/lc-aml-a311d-cc-v01
+UBOOT_TARGET=libretech-a311d-cc_defconfig
 
 AML_ENCRYPT=g12b
 
