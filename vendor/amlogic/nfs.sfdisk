@@ -1,0 +1,5 @@
+label: dos
+unit: sectors
+sector-size: 512
+
+start=2048, type=ef

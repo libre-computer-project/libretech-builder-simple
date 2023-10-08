@@ -29,6 +29,9 @@ LBS_finalize(){
 	if [ ! -z "$LBS_SPIFLASH" ]; then
 		. lib/spiflash.sh
 		LBS_SPIFLASH_build
+	elif [ ! -z "$LBS_NFS" ]; then
+		. lib/nfs.sh
+		LBS_NFS_build
 	elif [ ! -z "$LBS_MBRUEFI" ]; then
 		. lib/mbruefi.sh
 		LBS_MBRUEFI_build
