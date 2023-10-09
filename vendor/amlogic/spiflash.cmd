@@ -7,9 +7,25 @@ fi
 if sf probe; then
 	echo "SPI NOR found"
 else
-	echo "ERROR: SPI NOR not found!"
-	run stop
-	exit
+	if fdt list /soc/bus@ffd00000/spi@14000; then
+		if bind /soc/bus@ffd00000/spi@14000 meson_spifc; then
+			if sf probe; then
+				echo "SPI NOR found"
+			else
+				echo "ERROR: SPI NOR not found!"
+				run stop
+				exit
+			fi
+		else
+			echo "ERROR: SPI NOR bind failed."
+			run stop
+			exit
+		fi
+	else
+		echo "ERROR: SPI NOR not found!"
+		run stop
+		exit
+	fi
 fi
 
 if load $devtype $devnum $ramdisk_addr_r u-boot.bin.sha1sum; then
