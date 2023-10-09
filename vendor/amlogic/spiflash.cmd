@@ -4,28 +4,25 @@ if test $devtype = "usb_mass_storage"; then
 	env set devtype usb
 fi
 
-if sf probe; then
-	echo "SPI NOR found"
-else
-	if fdt list /soc/bus@ffd00000/spi@14000; then
-		if bind /soc/bus@ffd00000/spi@14000 meson_spifc; then
-			if sf probe; then
-				echo "SPI NOR found"
-			else
-				echo "ERROR: SPI NOR not found!"
-				run stop
-				exit
-			fi
-		else
-			echo "ERROR: SPI NOR bind failed."
-			run stop
-			exit
-		fi
+env print
+
+fdt addr $fdtcontroladdr
+if fdt list /soc/bus@ffd00000/spi@14000; then
+	if bind /soc/bus@ffd00000/spi@14000 meson_spifc; then
+		echo "SPIFC driver bound"
 	else
-		echo "ERROR: SPI NOR not found!"
+		echo "ERROR: SPI NOR driver bind failed!"
 		run stop
 		exit
 	fi
+fi
+
+if sf probe; then
+	echo "SPI NOR found"
+else
+	echo "ERROR: SPI NOR not found!"
+	run stop
+	exit
 fi
 
 if load $devtype $devnum $ramdisk_addr_r u-boot.bin.sha1sum; then
