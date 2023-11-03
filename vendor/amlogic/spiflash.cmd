@@ -44,9 +44,14 @@ fi
 if hash -v sha1 $kernel_addr_r $filesize *$ramdisk_addr_r; then
 	echo "Checksum verified"
 else
-	echo "ERROR: Checksum failed!"
-	run stop
-	exit
+	hash sha1 $kernel_addr_r $filesize *$kernel_addr_r
+	if cmp.l $kernel_addr_r $ramdisk_addr_r 5; then
+		echo "Checksum verified"
+	else
+		echo "ERROR: Checksum failed!"
+		run stop
+		exit
+	fi
 fi
 
 if sf update $kernel_addr_r 0 $filesize; then
@@ -68,9 +73,14 @@ fi
 if hash -v sha1 $kernel_addr_r $filesize *$ramdisk_addr_r; then
 	echo "Firmware checksum match"
 else
-	echo "ERROR: Firmware checksum do not match!"
-	run stop
-	exit
+	hash sha1 $kernel_addr_r $filesize *$kernel_addr_r
+	if cmp.l $kernel_addr_r $ramdisk_addr_r 5; then
+		echo "Checksum verified"
+	else
+		echo "ERROR: Firmware checksum do not match!"
+		run stop
+		exit
+	fi
 fi
 
 echo Flash Completed
