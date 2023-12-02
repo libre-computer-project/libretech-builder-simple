@@ -31,16 +31,16 @@ LBS_VENDOR_AMLOGIC_sign(){
 			--bl30 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30_new.bin.enc \
 			--bl31 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl31.img.enc \
 			--bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc \
-			--ddrfw1 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/piei.fw \
-			--ddrfw2 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/lpddr4_1d.fw \
-			--ddrfw3 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/lpddr4_2d.fw \
-			--ddrfw4 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/aml_ddr.fw \
+			--ddrfw1 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr4_1d.fw \
+			--ddrfw2 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr4_2d.fw \
+			--ddrfw3 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr3_1d.fw \
+			--ddrfw4 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/piei.fw \
+			--ddrfw5 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/lpddr4_1d.fw \
+			--ddrfw6 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/lpddr4_2d.fw \
+			--ddrfw7 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/diag_lpddr4.fw \
+			--ddrfw8 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/aml_ddr.fw \
+			--ddrfw9 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/lpddr3_1d.fw \
 			--level v3
-			
-			#--ddrfw4 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/diag_lpddr4.fw \
-			#--ddrfw1 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr4_1d.fw \
-			#--ddrfw2 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr4_2d.fw \
-			#--ddrfw3 "$LBS_VENDOR_AMLOGIC_PATH"/init/"$AML_ENCRYPT"/ddr3_1d.fw \
 	else
 		echo "Unknown Amlogic Platform" >&2
 		return 1
