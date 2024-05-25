@@ -3,3 +3,7 @@
 ATF_PLAT=rk3328
 ATF_TARGET=bl31
 ATF_OUTPUT_FILE=bl31/bl31.elf
+
+SPI_FLASH_OVERLAY=rk3328-spiflash.dtbo
+SPI_OF_NODE=/spi@ff190000
+SPI_DRIVER=rockchip_rk3288_spi

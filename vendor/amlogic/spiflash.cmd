@@ -1,4 +1,5 @@
 env set stop "while true; do sleep 1; done"
+env set firmware "u-boot.bin"
 
 if test $devtype = "usb_mass_storage"; then
 	env set devtype usb
@@ -11,7 +12,7 @@ if fdt list /soc/bus@ffd00000/spi@14000; then
 	if bind /soc/bus@ffd00000/spi@14000 meson_spifc; then
 		echo "SPIFC driver bound"
 	else
-		echo "ERROR: SPI NOR driver bind failed!"
+		echo "ERROR: SPIFC driver bind failed!"
 		run stop
 		exit
 	fi
@@ -25,7 +26,7 @@ else
 	exit
 fi
 
-if load $devtype $devnum $ramdisk_addr_r u-boot.bin.sha1sum; then
+if load $devtype $devnum $ramdisk_addr_r ${firmware}.sha1sum; then
 	echo "Firmware checksum loaded"
 else
 	echo "ERROR: Firmware checksum load failed!"
@@ -33,7 +34,7 @@ else
 	exit
 fi
 
-if load $devtype $devnum $kernel_addr_r u-boot.bin; then
+if load $devtype $devnum $kernel_addr_r $firmware; then
 	echo "Firmware loaded"
 else
 	echo "ERROR: Firmware load failed!"
@@ -84,4 +85,5 @@ else
 fi
 
 echo Flash Completed
-while true; do sleep 1; done
+run stop
+poweroff
