@@ -1,4 +1,4 @@
-BOARD_NAME=roc-rk3328-cc
+BOARD_NAME=roc-rk3328-cc-v2
 
 . configs/rockchip-rk3328
 
