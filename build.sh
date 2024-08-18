@@ -37,6 +37,9 @@ LBS_finalize(){
 	elif [ ! -z "$LBS_BR2" ]; then
 		. lib/br2.sh
 		LBS_BR2_build
+	elif [ ! -z "$LBS_UMS_EMMC" ]; then
+		. lib/ums-emmc.sh
+		LBS_UMS_EMMC_build
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
 		local target_size=$(stat --printf="%s" "$LBS_OUT_PATH/$LBS_TARGET")

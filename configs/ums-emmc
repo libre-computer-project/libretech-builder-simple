@@ -1,0 +1,3 @@
+LBS_UMS_EMMC=1
+LBS_UMS_EMMC_LOAD=$LBS_VENDOR_PATH/$VENDOR_PATH/ums-emmc/finalize.sh
+
