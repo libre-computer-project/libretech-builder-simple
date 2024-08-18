@@ -13,7 +13,6 @@ cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 . lib/edk2.sh
 . lib/optee.sh
 . lib/u-boot.sh
-. lib/buildroot.sh
 
 LBS_finalize(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
@@ -36,6 +35,7 @@ LBS_finalize(){
 		. lib/mbruefi.sh
 		LBS_MBRUEFI_build
 	elif [ ! -z "$LBS_BR2" ]; then
+		. lib/br2.sh
 		LBS_BR2_build
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
