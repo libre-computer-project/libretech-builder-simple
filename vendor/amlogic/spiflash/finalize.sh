@@ -1,4 +1,5 @@
 sudo mkfs.vfat ${loop_dev}p1
+
 local loop_mnt="$(mktemp -d)"
 sudo mount ${loop_dev}p1 "$loop_mnt"
 

@@ -6,7 +6,7 @@ sudo mount ${loop_dev}p1 "$loop_mnt"
 #u-boot binary
 sudo cp $LBS_UBOOT_PATH/u-boot-rockchip-spi.bin "$loop_mnt"
 sha1sum $LBS_UBOOT_PATH/u-boot-rockchip-spi.bin | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/u-boot-rockchip-spi.bin.sha1sum" > /dev/null
-sudo cp vendor/rockchip/$SPI_FLASH_OVERLAY "$loop_mnt"
+sudo cp $(dirname $BASH_SOURCE[0])/$SPI_FLASH_OVERLAY "$loop_mnt"
 
 #u-boot script
 local uboot_script=$(mktemp)
