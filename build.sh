@@ -42,29 +42,31 @@ LBS_finalize(){
 		LBS_UMS_EMMC_build
 	else
 		cp "$LBS_UBOOT_BIN_FINAL_PATH" "$LBS_OUT_PATH/$LBS_TARGET"
-		local target_size=$(stat --printf="%s" "$LBS_OUT_PATH/$LBS_TARGET")
-		case "${LBS_TARGET%%-*}" in
-			all)
-				:
-				;;
-			aml)
-				:
-				;;
-			roc)
-				:
-				;;
-			*)
-				echo "$FUNCNAME: unknown vendor: ${LBS_TARGET%%-*}" >&2
-				return 1
-				;;
-		esac
-		local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)-0x1000))
-		if [ "$target_size" -gt "$target_max" ]; then
-			echo "$FUNCNAME: WARNING: Target size ${target_size}B exceeds ${target_max}B" >&2
-			echo "$FUNCNAME: Continue? (y/n)" >&2
-			read -n 1 target_max_continue
-			if [ "${target_max_continue,,}" != "y" ]; then
-				false
+		if [ -z "$LBS_TARGET_OVERRIDE" ]; then
+			local target_size=$(stat --printf="%s" "$LBS_OUT_PATH/$LBS_TARGET")
+			case "${LBS_TARGET%%-*}" in
+				all)
+					:
+					;;
+				aml)
+					:
+					;;
+				roc)
+					:
+					;;
+				*)
+					echo "$FUNCNAME: unknown vendor: ${LBS_TARGET%%-*}" >&2
+					return 1
+					;;
+			esac
+			local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)-0x1000))
+			if [ "$target_size" -gt "$target_max" ]; then
+				echo "$FUNCNAME: WARNING: Target size ${target_size}B exceeds ${target_max}B" >&2
+				echo "$FUNCNAME: Continue? (y/n)" >&2
+				read -n 1 target_max_continue
+				if [ "${target_max_continue,,}" != "y" ]; then
+					false
+				fi
 			fi
 		fi
 	fi
@@ -89,6 +91,14 @@ fi
 if [ -z "$UBOOT_TARGET" ]; then
 	echo "$LBS_TARGET is not a valid target config!" >&2
 	exit 1
+fi
+
+if [ ! -z "$LBS_TARGET_OVERRIDE" ]; then
+	LBS_TARGET=$LBS_TARGET_OVERRIDE
+fi
+
+if [ ! -z "$LBS_UBOOT_BRANCH_OVERRIDE" ]; then
+	UBOOT_BRANCH=$LBS_UBOOT_BRANCH_OVERRIDE
 fi
 
 if [ "$HOSTTYPE" = "aarch64" ]; then
