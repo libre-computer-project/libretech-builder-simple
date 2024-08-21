@@ -4,6 +4,6 @@ BOARD_NAME=firefly-rk3399_defconfig
 
 LBS_OPTEE=0
 
-UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=u-boot/v2022.07/master
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=u-boot/v2022.07/master
 UBOOT_TARGET=firefly-rk3399_defconfig

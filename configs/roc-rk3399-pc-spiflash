@@ -4,8 +4,8 @@ BOARD_NAME=roc-rk3399-pc
 
 LBS_OPTEE=0
 
-UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=v2023.07/lc-roc-rk3399-pc
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=v2023.07/lc-roc-rk3399-pc
 UBOOT_TARGET=roc-pc-rk3399_defconfig
 
 . configs/spiflash

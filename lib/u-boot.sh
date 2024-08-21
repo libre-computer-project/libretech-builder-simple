@@ -2,9 +2,9 @@
 
 LBS_UBOOT_get(){
 	if [ -d "$LBS_UBOOT_PATH" ]; then
-		LBS_GIT_switchBranch "$LBS_UBOOT_PATH" "$UBOOT_GIT_BRANCH"
+		LBS_GIT_switchBranch "$LBS_UBOOT_PATH" "$UBOOT_BRANCH"
 	else
-		git clone --single-branch --depth 1 -b "$UBOOT_GIT_BRANCH" "$UBOOT_GIT_URL" "$LBS_UBOOT_PATH"
+		git clone --single-branch --depth 1 -b "$UBOOT_BRANCH" "$UBOOT_URL" "$LBS_UBOOT_PATH"
 	fi
 }
 

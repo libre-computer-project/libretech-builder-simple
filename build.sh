@@ -86,6 +86,11 @@ fi
 
 . "configs/$LBS_TARGET"
 
+if [ -z "$UBOOT_TARGET" ]; then
+	echo "$LBS_TARGET is not a valid target config!" >&2
+	exit 1
+fi
+
 if [ "$HOSTTYPE" = "aarch64" ]; then
 	# On AArch64 hosts, we don't download 3rd party toolchains.
 	# Instead, we use the ones that come from the distribution.

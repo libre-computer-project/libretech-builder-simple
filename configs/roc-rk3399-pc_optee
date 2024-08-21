@@ -17,8 +17,8 @@ LBS_OPTEE=1
 OPTEE_PLAT=rockchip-rk3399
 OPTEE_PLATELF_DIR=rockchip
 
-UBOOT_GIT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_GIT_BRANCH=u-boot/v2022.04/roc-rk3399-pc
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=u-boot/v2022.04/roc-rk3399-pc
 UBOOT_TARGET=roc-pc-rk3399_optee_defconfig
 
 . configs/rockchip
