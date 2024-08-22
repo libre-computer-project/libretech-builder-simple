@@ -1,0 +1,11 @@
+BOARD_NAME=roc-rk3328-cc
+
+. configs/rockchip-rk3328
+
+LBS_OPTEE=0
+
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=v2024.07/lc-roc-rk3328-cc-ums-emmc
+UBOOT_TARGET=roc-cc-rk3328_defconfig
+
+. configs/ums-emmc
