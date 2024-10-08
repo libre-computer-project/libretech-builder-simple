@@ -9,3 +9,5 @@ UBOOT_BRANCH=v2024.07/aml-a311d-cm-v01
 UBOOT_TARGET=libretech_aml_a311d_cm_v01_defconfig
 
 AML_ENCRYPT=g12b
+
+. configs/spiflash
