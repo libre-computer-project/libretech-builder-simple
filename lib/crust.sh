@@ -9,7 +9,7 @@ LBS_CRUST_get(){
 }
 
 LBS_CRUST_build(){
-	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" distclean
-	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" $CRUST_TARGET
-	CROSS_COMPILE=or1k-linux-musl- make -C "$LBS_CRUST_PATH" -j$(nproc) scp
+	CROSS_COMPILE=or1k-elf- make -C "$LBS_CRUST_PATH" distclean
+	CROSS_COMPILE=or1k-elf- make -C "$LBS_CRUST_PATH" $CRUST_TARGET
+	CROSS_COMPILE=or1k-elf- make -C "$LBS_CRUST_PATH" -j$(nproc) scp
 }
