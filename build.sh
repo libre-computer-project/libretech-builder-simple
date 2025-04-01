@@ -112,7 +112,7 @@ if [ "$HOSTTYPE" = "aarch64" ]; then
 	if [ "$LBS_CC" = "aarch64-elf-" ]; then
 		# Use the system Linux cross toolchain instead, elf is not
 		# always available
-		LBS_CC=aarch64-linux-gnu-gcc
+		LBS_CC=aarch64-linux-gnu-
 		if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
 			echo "Please install a local aarch64 toolchain:"
 			echo "  $ apt install gcc"
