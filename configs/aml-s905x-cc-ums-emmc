@@ -1,0 +1,13 @@
+BOARD_NAME=aml-s905x-cc
+
+. configs/amlogic-gxl
+
+LBS_OPTEE=0
+
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=v2023.07/lc-aml-s905x-cc-ums-emmc
+UBOOT_TARGET=libretech-cc_defconfig
+
+AML_ENCRYPT=gxl
+
+. configs/ums-emmc
