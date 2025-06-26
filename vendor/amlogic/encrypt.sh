@@ -18,8 +18,11 @@ LBS_VENDOR_AMLOGIC_sign(){
 		$encrypt_path --bl3enc --input "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl31.img --output "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl31.img.enc
 		$encrypt_path --bl3enc --input "$LBS_UBOOT_PATH"/u-boot.bin --output "$LBS_UBOOT_PATH"/u-boot.bin.enc --compress lz4
 		$encrypt_path --bl2sig --input "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl2_new.bin --output "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl2.bin.enc
-		$encrypt_path --bootmk --output "$LBS_UBOOT_BIN_FINAL_PATH" --bl2 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl2.bin.enc --bl30 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30.bin.enc \
-			--bl31 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl31.img.enc --bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc
+		$encrypt_path --bootmk --output "$LBS_UBOOT_BIN_FINAL_PATH" \
+			--bl2 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl2.bin.enc \
+			--bl30 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30.bin.enc \
+			--bl31 "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl31.img.enc \
+			--bl33 "$LBS_UBOOT_PATH"/u-boot.bin.enc
 	elif [ "$AML_ENCRYPT" = "g12a" ] || [ "$AML_ENCRYPT" = "g12b" ]; then
 		$encrypt_path --bl30sig --input "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30_new.bin --output "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30_new.bin.g12.enc --level v3
 		$encrypt_path --bl3sig --input "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30_new.bin.g12.enc --output "$LBS_VENDOR_AMLOGIC_PATH"/$BOARD_NAME/bl30_new.bin.enc --level v3 --type bl30
