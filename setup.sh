@@ -2,7 +2,7 @@
 
 if which apt; then
 	sudo apt install build-essential flex bison python3-setuptools swig python3-dev libssl-dev u-boot-tools python3-pyelftools git libncurses-dev xxd libgnutls28-dev \
-		gcc-arm-linux-gnueabihf gcc-arm-none-eabi gcc-or1k-elf gcc-aarch64-linux-gnu
+		gcc-arm-linux-gnueabihf gcc-arm-none-eabi gcc-or1k-elf gcc-aarch64-linux-gnu efitools
 elif which yum; then
 	sudo yum groupinstall 'Development Tools'
 	sudo yum install python3-setuptools swig python3-devel openssl-devel uboot-tools python3-pyelftools git ncurses-devel
