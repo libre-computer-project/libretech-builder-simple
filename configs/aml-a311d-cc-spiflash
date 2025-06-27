@@ -1,13 +1,2 @@
-BOARD_NAME=aml-a311d-cc
-
-. configs/amlogic-g12b
-
-LBS_OPTEE=0
-
-UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_BRANCH=v2024.01/lc-aml-a311d-cc
-UBOOT_TARGET=libretech-a311d-cc_defconfig
-
-AML_ENCRYPT=g12b
-
+. configs/aml-a311d-cc
 . configs/spiflash

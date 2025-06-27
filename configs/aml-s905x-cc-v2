@@ -5,7 +5,7 @@ BOARD_NAME=aml-s905x-cc-v2
 LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_BRANCH=v2023.07/lc-aml-s905x-cc-v2
+UBOOT_BRANCH=v2025.07/lc-aml-s905x-cc-v2
 UBOOT_TARGET=libretech-cc_v2_defconfig
 
 AML_ENCRYPT=gxl
