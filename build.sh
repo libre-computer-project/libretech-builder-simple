@@ -59,7 +59,7 @@ LBS_finalize(){
 					return 1
 					;;
 			esac
-			local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)-0x1000))
+			local target_max=$((1024*1024-(LBS_BOOT_SECTOR*512)))
 			if [ "$target_size" -gt "$target_max" ]; then
 				echo "$FUNCNAME: WARNING: Target size ${target_size}B exceeds ${target_max}B" >&2
 				echo "$FUNCNAME: Continue? (y/n)" >&2
