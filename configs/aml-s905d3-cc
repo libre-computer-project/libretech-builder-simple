@@ -9,3 +9,5 @@ UBOOT_BRANCH=v2025.07/lc-master
 UBOOT_TARGET=aml-s905d3-cc_defconfig
 
 AML_ENCRYPT=g12a
+
+. configs/spiflash

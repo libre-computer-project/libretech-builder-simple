@@ -25,10 +25,7 @@ LBS_finalize(){
 		. $LBS_VENDOR_PATH/$VENDOR_PATH/gxlimg.sh
 		LBS_VENDOR_finalize
 	fi
-	if [ ! -z "$LBS_SPIFLASH" ]; then
-		. lib/spiflash.sh
-		LBS_SPIFLASH_build
-	elif [ ! -z "$LBS_NFS" ]; then
+	if [ ! -z "$LBS_NFS" ]; then
 		. lib/nfs.sh
 		LBS_NFS_build
 	elif [ ! -z "$LBS_MBRUEFI" ]; then
@@ -69,6 +66,10 @@ LBS_finalize(){
 				fi
 			fi
 		fi
+	fi
+	if [ ! -z "$LBS_SPIFLASH" ]; then
+		. lib/spiflash.sh
+		LBS_SPIFLASH_build
 	fi
 	cp "$LBS_UBOOT_PATH"/.config "$LBS_OUT_PATH/${LBS_TARGET}.config"
 	cp "$LBS_UBOOT_PATH"/u-boot.dtb "$LBS_OUT_PATH/${LBS_TARGET}.dtb"

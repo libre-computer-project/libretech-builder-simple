@@ -4,8 +4,8 @@ LBS_SPIFLASH_build(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
 		mkdir -p "$LBS_OUT_PATH"
 	fi
-	truncate -s $LBS_SPIFLASH_DISK_SIZE "$LBS_OUT_PATH/$LBS_TARGET"
-	local loop_dev=$(sudo losetup --show -f "$LBS_OUT_PATH/$LBS_TARGET")
+	truncate -s $LBS_SPIFLASH_DISK_SIZE "$LBS_OUT_PATH/${LBS_TARGET}_spiflash"
+	local loop_dev=$(sudo losetup --show -f "$LBS_OUT_PATH/${LBS_TARGET}_spiflash")
 	sudo fdisk $loop_dev <<EOF || true
 I
 $LBS_SPIFLASH_SFDISK
