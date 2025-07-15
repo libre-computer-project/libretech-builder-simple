@@ -9,5 +9,3 @@ UBOOT_BRANCH=v2025.07/lc-master
 UBOOT_TARGET=libretech-cc_v2_defconfig
 
 AML_ENCRYPT=gxl
-
-. configs/spiflash

@@ -6,6 +6,8 @@ LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_BRANCH=v2025.07/lc-master
-UBOOT_TARGET=libretech-ac_defconfig
+UBOOT_TARGET=libretech-ac_spi_defconfig
 
 AML_ENCRYPT=gxl
+
+. configs/spiflash
