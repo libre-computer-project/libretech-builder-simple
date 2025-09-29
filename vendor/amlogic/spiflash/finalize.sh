@@ -8,7 +8,7 @@ sudo cp "$LBS_UBOOT_BIN_FINAL_PATH" "$loop_mnt/u-boot.bin"
 sha1sum $LBS_UBOOT_BIN_FINAL_PATH | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/u-boot.bin.sha1sum" > /dev/null
 
 #u-boot script
-sudo mkimage -A arm -T script -d "$LBS_SPIFLASH_SCRIPT" "$loop_mnt/boot.scr"
+sudo u-boot/tools/mkimage -A arm -T script -d "$LBS_SPIFLASH_SCRIPT" "$loop_mnt/boot.scr"
 
 df $loop_mnt
 sudo umount "$loop_mnt"

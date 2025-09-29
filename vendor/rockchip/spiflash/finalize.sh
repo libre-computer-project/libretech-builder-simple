@@ -11,7 +11,7 @@ sudo cp $(dirname $BASH_SOURCE[0])/$SPI_FLASH_OVERLAY "$loop_mnt"
 #u-boot script
 local uboot_script=$(mktemp)
 cat "$LBS_SPIFLASH_SCRIPT" | sed "s/%SPI_FLASH_OVERLAY%/$SPI_FLASH_OVERLAY/" | sed "s/%SPI_OF_NODE%/${SPI_OF_NODE//\//\\\/}/" | sed "s/%SPI_DRIVER%/$SPI_DRIVER/" | dd of=$uboot_script
-sudo mkimage -A arm -T script -d "$uboot_script" "$loop_mnt/boot.scr"
+sudo u-boot/tools/mkimage -A arm -T script -d "$uboot_script" "$loop_mnt/boot.scr"
 rm $uboot_script
 
 
