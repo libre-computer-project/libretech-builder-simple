@@ -5,7 +5,7 @@ BOARD_NAME=aml-s805x-ac-v2
 LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_BRANCH=v2025.07/lc-master
+UBOOT_BRANCH=v2026.01/lc-master
 UBOOT_TARGET=aml-s805x-ac-v2_defconfig
 
 AML_ENCRYPT=gxl
