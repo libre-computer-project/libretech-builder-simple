@@ -1,0 +1,10 @@
+BOARD_NAME=aml-s905x-cc-libre
+
+LBS_UBOOT_PATH=/home/dxue/git/u-boot
+
+. configs/amlogic-libre
+
+LBS_OPTEE=0
+
+UBOOT_BRANCH=master
+UBOOT_TARGET=libretech-cc_defconfig

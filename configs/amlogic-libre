@@ -1,0 +1,10 @@
+. configs/amlogic
+
+LBS_CC=aarch64-none-elf-
+LBS_ATF=1
+ATF_PLAT=gxl
+ATF_TARGET=bl31
+ATF_OUTPUT_FILE=bl31.bin
+
+# Native binman output (not encrypt.sh output)
+LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-meson-with-spl.bin"

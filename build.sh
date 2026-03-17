@@ -46,7 +46,10 @@ LBS_finalize(){
 					:
 					;;
 				aml)
-					:
+					if [ -z "$AML_ENCRYPT" ]; then
+						dd if="$LBS_OUT_PATH/$LBS_TARGET" of="$LBS_OUT_PATH/$LBS_TARGET.usb.bl2" bs=49152 count=1
+						dd if="$LBS_OUT_PATH/$LBS_TARGET" of="$LBS_OUT_PATH/$LBS_TARGET.usb.tpl" skip=49152 bs=1
+					fi
 					;;
 				roc)
 					:

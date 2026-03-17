@@ -59,5 +59,5 @@ LBS_UBOOT_build(){
 		done
 	fi
 	LBS_UBOOT_checkConfig "$LBS_UBOOT_PATH"/.config
-	CROSS_COMPILE=$LBS_CC make -C "$LBS_UBOOT_PATH" -j$(nproc)
+	CROSS_COMPILE=$LBS_CC BINMAN_ALLOW_MISSING=1 make -C "$LBS_UBOOT_PATH" -j$(nproc)
 }
