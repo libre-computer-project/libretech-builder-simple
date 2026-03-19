@@ -75,9 +75,9 @@ configs/aml-s905d3-cc
 
 ## U-Boot Branching Model
 
-All board support commits go on the shared `lc-master` branch (e.g. `v2026.04/lc-master`). The builder's `UBOOT_BRANCH` points to `lc-master`. Do NOT create per-board branches like `v2026.04/lc-roc-rk3328-cc` in the builder's u-boot repo.
+All board support commits go on the shared `lc-master` branch (e.g. `v2026.04/lc-master`). The builder's `UBOOT_BRANCH` points to `lc-master`. Do NOT create per-board branches directly in the builder's `u-boot/` repo.
 
-Per-board branches are only used with **worktree-based development**: create a u-boot worktree in `~/git/u-boot-worktree/`, make changes there on a per-board branch, and override the builder u-boot path to point to the worktree. This keeps the builder's u-boot repo clean on `lc-master`.
+Per-board branches are for **worktree-based development**: branch from `lc-master`, create a worktree in `~/git/u-boot-worktree/`, develop and test there using `LBS_UBOOT_PATH` and `LBS_UBOOT_BRANCH_OVERRIDE`, then merge back to `lc-master` when done. See `readme.md` "Worktree-Based Development" for the full workflow.
 
 ## Output Files
 

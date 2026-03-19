@@ -83,7 +83,32 @@ To flash SPI NOR, dump the output image to a MMC device and the board will boot 
 - If there are **uncommitted tracked files**, it refuses to switch and exits with an error.
 - If the repo is in a **bisect**, it skips the branch switch entirely.
 
-To avoid branch switching, set `LBS_UBOOT_PATH` to a separate worktree directory.
+### Worktree-Based Development
+
+For board-specific development without modifying the main u-boot repo, use git worktrees in `~/git/u-boot-worktree/`:
+
+```
+# Create a board-specific branch from lc-master
+cd ~/git/libretech-builder-simple/u-boot
+git branch v2026.04/lc-roc-rk3328-cc v2026.04/lc-master
+
+# Create a worktree on that branch
+git worktree add ~/git/u-boot-worktree/roc-rk3328-cc v2026.04/lc-roc-rk3328-cc
+
+# Build using the worktree
+LBS_UBOOT_PATH=~/git/u-boot-worktree/roc-rk3328-cc \
+LBS_UBOOT_BRANCH_OVERRIDE=v2026.04/lc-roc-rk3328-cc \
+./build.sh roc-rk3328-cc
+
+# After testing, merge back to lc-master
+git checkout v2026.04/lc-master
+git merge v2026.04/lc-roc-rk3328-cc
+
+# Clean up
+git worktree remove ~/git/u-boot-worktree/roc-rk3328-cc
+```
+
+`LBS_UBOOT_PATH` overrides the u-boot source directory. `LBS_UBOOT_BRANCH_OVERRIDE` must match the worktree's branch so `LBS_GIT_switchBranch` does not attempt to switch away from it.
 
 ### u-boot menuconfig
 ```
