@@ -9,6 +9,12 @@ LBS_ATF_get(){
 }
 
 LBS_ATF_build(){
+	local atf_bl32="NEED_BL32=no"
+	local atf_spd=""
+	if [ ! -z "$LBS_OPTEE" ] && [ "$LBS_OPTEE" -eq 1 ]; then
+		atf_bl32="NEED_BL32=yes"
+		atf_spd="SPD=opteed"
+	fi
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" distclean
-	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" -j$(nproc) PLAT=$ATF_PLAT DEBUG=0 LOG_LEVEL=${LBS_ATF_LOGLEVEL:-20} NEED_BL32=no SPD=opteed $ATF_TARGET
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" -j$(nproc) PLAT=$ATF_PLAT DEBUG=0 LOG_LEVEL=${LBS_ATF_LOGLEVEL:-20} $atf_bl32 $atf_spd $ATF_TARGET
 }
