@@ -49,9 +49,44 @@ To flash SPI NOR, dump the output image to a MMC device and the board will boot 
 
 ## Advanced Configuration
 
-### u-boot
+### Environment Variables
+
+#### U-Boot
+
+| Variable | Description |
+|----------|-------------|
+| `LBS_UBOOT_MENUCONFIG=1` | Launch interactive menuconfig after defconfig. Prompts to save to defconfig on exit. |
+| `LBS_UBOOT_BRANCH_OVERRIDE=BRANCH` | Override the u-boot branch from the board config. |
+| `LBS_UBOOT_PATH=PATH` | Override the u-boot source directory (default: `u-boot`). Use this to point to a worktree for development. |
+| `LBS_UBOOT_CFGCHECK=1` | Verify u-boot .config against `vendor/libre-computer/u-boot_configs`. |
+
+#### Git
+
+| Variable | Description |
+|----------|-------------|
+| `LBS_GIT_REMOTE_DEFAULT` | Default git remote for fetching branches (default: `origin`, set in `configs/build`). |
+| `LBS_GIT_REMOTE_OVERRIDE="REPO1 REPO2"` | Space-separated list of repos to use alternate remotes for fetching. |
+
+#### Build Targets
+
+| Variable | Description |
+|----------|-------------|
+| `LBS_TARGET_OVERRIDE=NAME` | Override the output target name. |
+| `LBS_OUT_PATH=PATH` | Override the output directory (default: `out`). |
+
+### Git Branch Behavior
+
+`build.sh` calls `LBS_GIT_switchBranch` on the u-boot repo before building:
+
+- If the target branch **exists locally**, it checks out the local branch (no fetch).
+- If the target branch **does not exist locally**, it fetches from the remote and creates a local branch from `FETCH_HEAD`.
+- If there are **uncommitted tracked files**, it refuses to switch and exits with an error.
+- If the repo is in a **bisect**, it skips the branch switch entirely.
+
+To avoid branch switching, set `LBS_UBOOT_PATH` to a separate worktree directory.
+
+### u-boot menuconfig
 ```
-#To configure u-boot, set LBS_UBOOT_MENUCONFIG=1.
 LBS_UBOOT_MENUCONFIG=1 ./build.sh BOARD_TARGET
 ```
 
