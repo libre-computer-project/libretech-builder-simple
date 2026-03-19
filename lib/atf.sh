@@ -15,6 +15,6 @@ LBS_ATF_build(){
 		atf_bl32="NEED_BL32=yes"
 		atf_spd="SPD=opteed"
 	fi
-	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" distclean
+	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" PLAT=$ATF_PLAT clean
 	CROSS_COMPILE=$LBS_CC make -C "$LBS_ATF_PATH" -j$(nproc) PLAT=$ATF_PLAT DEBUG=0 LOG_LEVEL=${LBS_ATF_LOGLEVEL:-20} $atf_bl32 $atf_spd $ATF_TARGET
 }
