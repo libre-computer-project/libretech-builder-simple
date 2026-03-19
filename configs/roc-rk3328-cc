@@ -2,6 +2,7 @@ BOARD_NAME=roc-rk3328-cc
 
 . configs/rockchip-rk3328
 
+LBS_CC=aarch64-none-elf-
 LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
