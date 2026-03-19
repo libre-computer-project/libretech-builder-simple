@@ -4,6 +4,14 @@ set -ex
 
 cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
+# Serialize: only one build instance at a time
+LOCKFILE=".build.lock"
+exec 9>"$LOCKFILE"
+if ! flock -n 9; then
+	echo "Another build is already running. Waiting..." >&2
+	flock 9
+fi
+
 . configs/build
 
 . lib/gcc.sh

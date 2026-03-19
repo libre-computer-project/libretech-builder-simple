@@ -5,5 +5,5 @@ BOARD_NAME=roc-rk3328-cc
 LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
-UBOOT_BRANCH=v2023.07/lc-roc-rk3328-cc
+UBOOT_BRANCH=v2026.04/lc-master
 UBOOT_TARGET=roc-cc-rk3328_defconfig
