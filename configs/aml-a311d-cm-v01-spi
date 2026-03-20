@@ -1,4 +1,4 @@
-BOARD_NAME=aml-a311d-cm-v01-spiflash
+BOARD_NAME=aml-a311d-cm-v01
 
 . configs/amlogic-g12b
 

@@ -1,13 +1,13 @@
-BOARD_NAME=aml-s905d3-cc-v01-spiflash
+BOARD_NAME=aml-a311d-cc-v01
 
-. configs/amlogic-g12a
+. configs/amlogic-g12b
 
 LBS_OPTEE=0
 
 UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
 UBOOT_BRANCH=v2026.04/lc-master
-UBOOT_TARGET=aml-s905d3-cc-v01_spi_defconfig
+UBOOT_TARGET=aml-a311d-cc-v01_spi_defconfig
 
-AML_ENCRYPT=g12a
+AML_ENCRYPT=g12b
 
 . configs/spiflash
