@@ -33,6 +33,11 @@ if [ ! -z "$1" ]; then
 	esac
 fi
 
+# When sourced, export boards and stop. When executed, build.
+if [ "${BASH_SOURCE[0]}" != "$0" ]; then
+	return
+fi
+
 for board in ${boards[@]}; do
 	./build.sh $board
 done
