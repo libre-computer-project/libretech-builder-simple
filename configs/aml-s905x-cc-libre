@@ -1,10 +1,47 @@
-BOARD_NAME=aml-s905x-cc-libre
+# aml-s905x-cc-libre -- build against the local u-boot tree at ~/git/u-boot
+# using the binman flow (SPL as BL2, ATF from source) instead of vendor
+# aml_encrypt_gxl packaging.
+#
+# Include chain:
+#   this file -> amlogic-gxl -> amlogic -> atf
+#
+# amlogic sets LBS_ATF=0 for all Amlogic configs (vendor BL2 flow).
+# amlogic-gxl sets ATF_PLAT=gxl, ATF_TARGET=bl31, ATF_OUTPUT_FILE=bl31.bin.
+# We override LBS_ATF=1 here: only this config builds ATF from source.
+#
+# Usage:
+#   cd ~/local/git/libretech-builder-simple
+#   ./tools/spl-test.sh [--build-only] [--flash-only]
 
-LBS_UBOOT_PATH=/home/dxue/git/u-boot
+BOARD_NAME=aml-s905x-cc
 
-. configs/amlogic-libre
+. configs/amlogic-gxl
 
 LBS_OPTEE=0
 
+# Build ATF from source. amlogic-gxl already sets ATF_PLAT/TARGET/OUTPUT_FILE.
+LBS_ATF=1
+
+# Point at the local development tree; skip remote clone/fetch.
+LBS_UBOOT_PATH=/home/dxue/git/u-boot
+
+# Must match the branch currently checked out in LBS_UBOOT_PATH so
+# LBS_GIT_switchBranch does not try to fetch/checkout a different branch.
 UBOOT_BRANCH=master
+
+UBOOT_URL=
 UBOOT_TARGET=libretech-cc_defconfig
+
+# binman produces u-boot-meson-with-spl.bin (not u-boot-amlogic.bin).
+# LBS_finalize copies this to out/aml-s905x-cc-libre.
+LBS_UBOOT_BIN_FINAL_PATH="$LBS_UBOOT_PATH/u-boot-meson-with-spl.bin"
+
+# Do NOT set AML_ENCRYPT -- binman handles packaging internally.
+# AML_ENCRYPT would invoke the vendor aml_encrypt_gxl flow which is
+# incompatible with the binman image (vendor BL2 + u-boot.bin as BL33
+# vs SPL-as-BL2 + FIT with bl31.bin + u-boot-nodtb).
+
+# The bundled Linaro toolchains (7.x) are too old (< GCC 10) for this u-boot.
+# LBS_GCC_exportPATH prepends the Linaro dirs to PATH, so use an absolute
+# path to bypass it.
+LBS_CC=/usr/bin/aarch64-linux-gnu-

@@ -11,4 +11,3 @@ LBS_ATF=1
 . configs/crust
 
 LBS_ARCH=arm64
-LBS_CC=aarch64-elf-

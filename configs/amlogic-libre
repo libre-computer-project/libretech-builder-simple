@@ -1,6 +1,5 @@
 . configs/amlogic
 
-LBS_CC=aarch64-none-elf-
 LBS_ATF=1
 ATF_PLAT=gxl
 ATF_TARGET=bl31
