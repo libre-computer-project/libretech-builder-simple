@@ -10,3 +10,4 @@ UBOOT_TARGET=libretech-s905d-pc_defconfig
 
 AML_ENCRYPT=gxl
 
+. configs/spiflash

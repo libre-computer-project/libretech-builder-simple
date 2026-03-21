@@ -1,0 +1,11 @@
+BOARD_NAME=aml-s905d3-cm-rpi-cm5-io
+
+. configs/amlogic-g12a
+
+LBS_OPTEE=0
+
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=v2026.04/lc-master
+UBOOT_TARGET=aml-s905d3-cm-rpi-cm5-io_defconfig
+
+AML_ENCRYPT=g12a

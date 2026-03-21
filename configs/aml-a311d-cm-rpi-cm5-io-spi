@@ -1,0 +1,13 @@
+BOARD_NAME=aml-a311d-cm-rpi-cm5-io
+
+. configs/amlogic-g12b
+
+LBS_OPTEE=0
+
+UBOOT_URL='https://github.com/libre-computer-project/libretech-u-boot.git'
+UBOOT_BRANCH=v2026.04/lc-master
+UBOOT_TARGET=aml-a311d-cm-rpi-cm5-io_spi_defconfig
+
+AML_ENCRYPT=g12b
+
+. configs/spiflash

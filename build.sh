@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -ex
-
 cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 . configs/build
@@ -80,8 +78,19 @@ LBS_finalize(){
 	cp "$LBS_UBOOT_PATH"/u-boot.dtb "$LBS_OUT_PATH/${LBS_TARGET}.dtb"
 	dtc -I dtb -O dts "$LBS_UBOOT_PATH/u-boot.dtb" -o "$LBS_OUT_PATH/${LBS_TARGET}.dts"
 }
-if [ -z "$1" ]; then
-	echo "$0 config"
+if [ -z "$1" ] || [ "$1" = "list" ]; then
+	if [ "$1" = "list" ]; then
+		for cfg in configs/*; do
+			cfg_name=$(basename "$cfg")
+			result=$(bash -c ". configs/build; . \"$cfg\" 2>/dev/null; [ ! -z \"\$UBOOT_TARGET\" ] && echo \"\$UBOOT_BRANCH\"")
+			if [ ! -z "$result" ]; then
+				printf "%-40s %s\n" "$cfg_name" "$result"
+			fi
+		done
+		exit 0
+	fi
+	echo "Usage: $0 <board-target>"
+	echo "       $0 list"
 	exit 1
 fi
 
@@ -106,6 +115,16 @@ fi
 if [ ! -z "$LBS_UBOOT_BRANCH_OVERRIDE" ]; then
 	UBOOT_BRANCH=$LBS_UBOOT_BRANCH_OVERRIDE
 fi
+
+if [ -z "$LBS_CC" ]; then
+	case "$LBS_ARCH" in
+		arm64) LBS_CC=aarch64-none-elf-;;
+		armhf) LBS_CC=arm-none-eabi-;;
+		*) echo "Unknown LBS_ARCH: $LBS_ARCH" >&2; exit 1;;
+	esac
+fi
+
+set -ex
 
 if [ "$HOSTTYPE" = "aarch64" ]; then
 	# On AArch64 hosts, we don't download 3rd party toolchains.
