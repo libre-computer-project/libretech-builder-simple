@@ -127,20 +127,13 @@ fi
 set -ex
 
 if [ "$HOSTTYPE" = "aarch64" ]; then
-	# On AArch64 hosts, we don't download 3rd party toolchains.
-	# Instead, we use the ones that come from the distribution.
-	if ! command -v arm-linux-gnueabihf-gcc >/dev/null 2>&1; then
-		echo "Please install a local armhf toolchain:"
-		echo "  $ apt install gcc-arm-linux-gnueabihf"
-		exit 1
-	fi
-	if [ "$LBS_CC" = "aarch64-elf-" ]; then
-		# Use the system Linux cross toolchain instead, elf is not
-		# always available
+	# On AArch64 hosts, use distribution toolchains instead of
+	# downloading 3rd party x86_64 binaries.
+	if [ "$LBS_CC" = "aarch64-elf-" ] || [ "$LBS_CC" = "aarch64-none-elf-" ]; then
 		LBS_CC=aarch64-linux-gnu-
 		if ! command -v aarch64-linux-gnu-gcc >/dev/null 2>&1; then
 			echo "Please install a local aarch64 toolchain:"
-			echo "  $ apt install gcc"
+			echo "  $ apt install gcc-aarch64-linux-gnu"
 			exit 1
 		fi
 	elif [ "$LBS_CC" = "arm-none-eabi-" ]; then
@@ -149,6 +142,11 @@ if [ "$HOSTTYPE" = "aarch64" ]; then
 			echo "  $ apt install gcc-arm-none-eabi"
 			exit 1
 		fi
+	fi
+	if ! command -v arm-linux-gnueabihf-gcc >/dev/null 2>&1; then
+		echo "Please install a local armhf toolchain:"
+		echo "  $ apt install gcc-arm-linux-gnueabihf"
+		exit 1
 	fi
 else
 	LBS_GCC_download
