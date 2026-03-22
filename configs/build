@@ -9,4 +9,5 @@ LBS_OPTEE_PATH=optee
 LBS_UBOOT_PATH=${LBS_UBOOT_PATH:-u-boot}
 LBS_VENDOR_PATH=vendor
 LBS_BR2_PATH=br2
+LBS_LWT_PATH=${LBS_LWT_PATH:-../libretech-wiring-tool}
 LBS_OUT_PATH=out

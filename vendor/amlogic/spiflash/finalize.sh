@@ -7,6 +7,12 @@ sudo mount ${loop_dev}p1 "$loop_mnt"
 sudo cp "$LBS_UBOOT_BIN_FINAL_PATH" "$loop_mnt/u-boot.bin"
 sha1sum $LBS_UBOOT_BIN_FINAL_PATH | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/u-boot.bin.sha1sum" > /dev/null
 
+#overlay FIT
+if [ ! -z "$LBS_OVERLAYS_FIT" ] && [ -f "$LBS_OVERLAYS_FIT" ]; then
+	sudo cp "$LBS_OVERLAYS_FIT" "$loop_mnt/overlays.fit"
+	sha1sum "$LBS_OVERLAYS_FIT" | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/overlays.fit.sha1sum" > /dev/null
+fi
+
 #u-boot script
 sudo u-boot/tools/mkimage -A arm -T script -d "$LBS_SPIFLASH_SCRIPT" "$loop_mnt/boot.scr"
 

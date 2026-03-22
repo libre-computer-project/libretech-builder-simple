@@ -8,6 +8,12 @@ sudo cp $LBS_UBOOT_PATH/u-boot-rockchip-spi.bin "$loop_mnt"
 sha1sum $LBS_UBOOT_PATH/u-boot-rockchip-spi.bin | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/u-boot-rockchip-spi.bin.sha1sum" > /dev/null
 sudo cp $(dirname $BASH_SOURCE[0])/$SPI_FLASH_OVERLAY "$loop_mnt"
 
+#overlay FIT
+if [ ! -z "$LBS_OVERLAYS_FIT" ] && [ -f "$LBS_OVERLAYS_FIT" ]; then
+	sudo cp "$LBS_OVERLAYS_FIT" "$loop_mnt/overlays.fit"
+	sha1sum "$LBS_OVERLAYS_FIT" | cut -d " " -f 1 | xxd -r -p | sudo tee "$loop_mnt/overlays.fit.sha1sum" > /dev/null
+fi
+
 #u-boot script
 local uboot_script=$(mktemp)
 cat "$LBS_SPIFLASH_SCRIPT" | sed "s/%SPI_FLASH_OVERLAY%/$SPI_FLASH_OVERLAY/" | sed "s/%SPI_OF_NODE%/${SPI_OF_NODE//\//\\\/}/" | sed "s/%SPI_DRIVER%/$SPI_DRIVER/" | dd of=$uboot_script

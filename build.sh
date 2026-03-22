@@ -11,6 +11,7 @@ cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 . lib/edk2.sh
 . lib/optee.sh
 . lib/u-boot.sh
+. lib/overlays.sh
 
 LBS_finalize(){
 	if [ ! -d "$LBS_OUT_PATH" ]; then
@@ -70,6 +71,7 @@ LBS_finalize(){
 			fi
 		fi
 	fi
+	LBS_OVERLAYS_build_fit
 	if [ ! -z "$LBS_SPIFLASH" ]; then
 		. lib/spiflash.sh
 		LBS_SPIFLASH_build

@@ -95,6 +95,36 @@ else
 	fi
 fi
 
+if load $devtype $devnum $ramdisk_addr_r overlays.fit.sha1sum; then
+	if load $devtype $devnum $kernel_addr_r overlays.fit; then
+		if hash -v sha1 $kernel_addr_r $filesize *$ramdisk_addr_r; then
+			echo "Overlay FIT checksum verified"
+		else
+			hash sha1 $kernel_addr_r $filesize *$kernel_addr_r
+			if cmp.l $kernel_addr_r $ramdisk_addr_r 5; then
+				echo "Overlay FIT checksum verified"
+			else
+				echo "ERROR: Overlay FIT checksum failed!"
+				run stop
+				exit
+			fi
+		fi
+		if sf update $kernel_addr_r 0x200000 $filesize; then
+			echo "Overlay FIT updated"
+		else
+			echo "ERROR: Overlay FIT update failed!"
+			run stop
+			exit
+		fi
+	else
+		echo "ERROR: Overlay FIT load failed!"
+		run stop
+		exit
+	fi
+else
+	echo "No overlay FIT found, skipping"
+fi
+
 echo Flash Completed
 run stop
 poweroff
