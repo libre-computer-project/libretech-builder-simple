@@ -4,6 +4,15 @@ cd $(readlink -f $(dirname ${BASH_SOURCE[0]}))
 
 . configs/build
 
+# Lock the output directory to prevent concurrent builds from corrupting it
+_LOCKFILE="${LBS_OUT_PATH:=out}/.build.lock"
+mkdir -p "$LBS_OUT_PATH"
+exec 9>"$_LOCKFILE"
+if ! flock -n 9; then
+	echo ":: Waiting for concurrent U-Boot build to finish..."
+	flock -w 600 9 || { echo "ERROR: Timed out waiting for U-Boot build lock"; exit 1; }
+fi
+
 . lib/gcc.sh
 . lib/git.sh
 . lib/atf.sh
